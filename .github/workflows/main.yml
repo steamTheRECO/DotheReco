@@ -4,9 +4,9 @@ name: CI/CD with AWS CodeDeploy
 
 env:
   PROJECT_NAME: DotheReco
-  BUCKET_NAME: STEAm-s3-bucket
-  CODE_DEPLOY_APP: STEAm-codedeploy-app
-  CODE_DEPLOY_DEPLOYMENT_GROUP: STEAM-deployment-group
+  BUCKET_NAME: steamthereco-bucket
+  CODE_DEPLOY_APP: STEAMcodedeploy-app-
+  CODE_DEPLOY_DEPLOYMENT_GROUP: STEAM-codedeploy-deployment-group
   
 # Controls when the workflow will run
 on:
