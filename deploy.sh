@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-APP_NAME=DotheReco
+APP_NAME=dothereco
 REPOSITORY=/home/ec2-user/
 
 echo "> Check the currently running container"
