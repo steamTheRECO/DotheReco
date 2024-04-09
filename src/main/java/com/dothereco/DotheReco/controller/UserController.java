@@ -23,8 +23,10 @@ public class UserController {
 
     //회원가입 페이지 띄워줌.
     @GetMapping("/signup/json")
+
     public String signup(MemberFormDTO memberFormDto) {
         return "signup";
+
     }
 
     //회원가입 처리 해주는 메서드
@@ -84,7 +86,4 @@ public class UserController {
             return ResponseEntity.badRequest().body("회원가입에 실패하였습니다.");
         }
     }
-
-
-
 }
