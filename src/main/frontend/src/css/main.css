@@ -1,44 +1,50 @@
+@import url('https://webfontworld.github.io/NanumSquareRound/NanumSquareRound.css');
+@import url('https://fonts.googleapis.com/css2?family=Dongle:wght@700&family=Monomaniac+One&display=swap');
+
 * {
     margin: 0;
     box-sizing: border-box;
 }
 
-body {
+.main-gray-box {
     justify-content: center;
     align-items: center;
-    max-width: 500px;
-    margin: auto; /* 가운데 정렬 */
-    overflow-x: hidden;
+    margin:-225px auto;
 }
 
-.top_right_images {
-    position: relative;
-    margin-top: 25px;
-    z-index: 100;
-    left: 350px;
+/*우측 상단 이미지*/
+.top-right-images {
+    top: 20px; /* 원하는 상단 위치로 조정 */
+    right: 100px; /* 원하는 우측 위치로 조정 */
+    padding-left: 320px;
+    z-index: 1000; /* 다른 요소보다 위에 표시 */
 }
 
-.top_right_images img {
-    margin-left: 20px; /* 이미지 사이의 간격 조정 */
+.top-right-images img {
     width: 30px;
     height: 30px;
+    margin-left: 20px; /* 이미지 사이의 간격 조정 */
     cursor: pointer;
 }
 
-h2{
+.top-right-images img:hover {
+    opacity: 0.7; /* 호버 시 투명도 조정 */
+    cursor: pointer; /* 호버 시 커서 모양 변경 */
+}
+
+/*popup 안의 시간대 추천 글자*/
+.search-h2{
     font-family: 'NanumSquareRound',sans-serif;
     text-align: center;
     margin-top: 18px;
     font-size: 20px;
 }
 
-
-/*search img를 눌렀을 때 나오는 화면*/
-.popup_wrap2,
-.popup_wrap3 {
+/*search를 눌렀을 때 나오는 popup - 시간대 추천 mini calendar*/
+.search-popup-wrap {
     display: none;
-    width: 420px; /* 팝업창 너비 자동 조정 */
-    height: 730px; /* 팝업창 높이 자동 조정 */
+    width: 440px; /* 팝업창 너비 자동 조정 */
+    height: 743px; /* 팝업창 높이 자동 조정 */
     position: fixed;
     top: 48%; /* 화면 세로 중앙 정렬을 위해 top을 50%로 설정 */
     left: 50%;
@@ -48,6 +54,43 @@ h2{
     border: 1px solid #333;
     border-radius: 15px;
     padding: 10px; /* 팝업 내부 여백 */
+}
+
+.searchList-popup-wrap {
+    display: none;
+    width: 440px; /* 팝업창 너비 자동 조정 */
+    height: 743px; /* 팝업창 높이 자동 조정 */
+    position: fixed;
+    top: 48%; /* 화면 세로 중앙 정렬을 위해 top을 50%로 설정 */
+    left: 50%;
+    transform: translate(-50%, -50%); /* 화면 가운데 정렬을 위해 translate 사용 */
+    background: #FFFFFF;
+    z-index: 1000; /* 다른 요소들보다 위에 표시되도록 높은 값 설정 */
+    border: 1px solid #333;
+    border-radius: 15px;
+    padding: 10px; /* 팝업 내부 여백 */
+}
+
+/*recommend list 꾸미기*/
+.recoLists {
+    line-height: 1.5;
+}
+
+.recoList {
+    border: 1px solid #ccc; /* 테두리 스타일 설정 */
+    border-radius: 10px; /* 테두리의 모서리를 둥글게 만듦 */
+    padding: 15px; /* 내부 여백 설정 */
+    margin-top: 25px;
+    font-family: 'NanumSquareRound', sans-serif;
+    margin-bottom: -8px;
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1); /* 그림자 효과 추가 */
+    width: 90%;
+    cursor: pointer;
+    margin-left: 20px;
+}
+
+.recoList:hover{
+    background-color: #acada9;
 }
 
 .mini_back_bg{
@@ -60,6 +103,10 @@ h2{
     top: 0;
     left: 0;
     z-index: 1;
+}
+
+.search-back-button{
+    margin-top: -15px;
 }
 
 .mini_calendar {
@@ -90,7 +137,7 @@ h2{
 
 .mini_days {
     display: flex;
-    margin: 20px 0px;
+    margin: 10px;
     font-size: 12px;
     font-family: "Monomaniac One", sans-serif;
 }
@@ -133,40 +180,74 @@ h2{
     color: #396EE2;
 }
 
+.mini_nav-btn:hover{
+    opacity: 0.7; /* 호버 시 투명도 조정 */
+    background-color: transparent;
+}
+
 .mini_other {
     opacity: 0.3;
 }
 
-.mini_today {
-    position: relative;
-    color: #FFFFFF;
+/* main.css 파일에 추가 */
+.mini_date.selected {
+    background-color: #80A160; /* 선택된 날짜의 배경색 */
+    color: #ffffff; /* 선택된 날짜의 텍스트 색상 */
+    border-radius: 50%; /* 선택된 날짜의 테두리를 둥글게 만듦 */
 }
 
-/* 각 날짜를 표시하는 스타일 */
-.mini_dates .date .mini_this {
-    cursor: pointer; /* 마우스 포인터를 변경하여 클릭 가능한 상태로 표시 */
-    display: inline-block;
-    width: 32px;
-    height: 32px;
-    line-height: 30px;
+/*예상 소요시간 버튼*/
+.time-picker{
     text-align: center;
-    border-radius: 50%; /* 원형 모양으로 설정 */
-    margin: 5px;
+    margin-top: -50px;
 }
 
-/* 선택된 날짜를 표시하는 스타일 */
-.mini_dates .date .mini_this.selected {
-    background-color: #80A160;
-    color: white;
+.estimatedTime{
+    text-align: center;
+}
+
+.time-buttons {
+    margin-top: 10px;
+    text-align: center;
+}
+
+.time-buttons button {
+    margin-top: 5px;
+    margin-right: 10px; /* 버튼들 사이의 우측 마진 설정 */
+    border-radius: 10px;
+    background-color: #acada9;
+    border: none;
+    font-size: 14px;
+    width: 90px;
+    height: 28px;
+    font-family: 'NanumSquareRound', sans-serif;
+    cursor: pointer;
+}
+
+/* 마지막 버튼의 우측 마진을 제거하기 위한 CSS */
+.time-buttons button:last-child {
+    margin-top: 10px;
+    margin-right: 0; /* 마지막 버튼의 우측 마진 제거 */
+}
+
+.estimated-submit{
+    border-radius: 5px;
+    font-family: 'NanumSquareRound', sans-serif;
+    border: none;
+    font-size: 15px;
+    width: 100px;
+    height: 35px;
+    cursor: pointer;
+    margin-top: 20px;
 }
 
 /*addSchedule을 눌렀을 때 나오는 popup*/
-.popup_wrap {
+.addSche-popup-wrap {
     display: none;
-    width: 150px; /* 팝업창 너비 자동 조정 */
+    width: 160px; /* 팝업창 너비 자동 조정 */
     height: auto; /* 팝업창 높이 자동 조정 */
     position: fixed;
-    top: 9%;
+    top: 8%;
     left: 50%;
     transform: translateX(60px);
     background: #FFFFFF;
@@ -176,14 +257,14 @@ h2{
     padding: 10px; /* 팝업 내부 여백 */
 }
 
-.button_container {
+.addSche-button-container {
     display: flex;
     flex-direction: column;
     align-items: center;
 }
 
 
-.button_container button {
+.addSche-button-container button {
     font-family: 'NanumSquareRound',sans-serif;
     width: 100%; /* 버튼이 컨테이너의 너비를 채우도록 조정 */
     padding: 10px;
@@ -194,33 +275,35 @@ h2{
     background-color: #FFFFFF;
 }
 
-.back_bg{
-    display: none;
+/*메인 캘린더*/
+.back-bg {
     position: fixed;
-    content:"";
-    width: 100%;
-    height: 100%;
-    background-color: transparent;
     top: 0;
     left: 0;
-    z-index: 1;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent black */
+
+    z-index: 999; /* Ensure it covers other elements */
+    display: none; /* Initially hidden */
 }
+
 
 .calendar {
     font-family: "Monomaniac One", sans-serif;
     font-size: 20px;
-    width: 90%;
+    width: 94%;
     max-width: 500px;
     height: 780px;
-    margin: 60px auto;
     text-align: center;
+    margin:auto;
 }
 
 .header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-top: -40px;
+    margin-top: 10px;
 }
 
 .nav-btn {
@@ -233,9 +316,14 @@ h2{
     cursor: pointer;
 }
 
+.nav-btn:hover{
+    opacity: 0.7; /* 호버 시 투명도 조정 */
+    background-color: transparent;
+}
+
 .days {
     display: flex;
-    margin: 20px 0px;
+    margin: 5px 0;
     font-size: 12px;
     font-family: "Monomaniac One", sans-serif;
 }
@@ -244,6 +332,7 @@ h2{
     width: calc(100% / 7);
     text-align: center;
     font-family: "Monomaniac One", sans-serif;
+    margin-top: 12px;
 }
 
 .dates {
@@ -301,128 +390,44 @@ h2{
     content: '';
 }
 
-.bottom_menu {
-    position: fixed;
-    bottom: 0px;
-    left: 0px;
+/*하단 메뉴바*/
+
+.footer {
+    display: flex;
+    bottom: 0;
+    left: 0;
     width: 100%;
-    height: 10%;
+    height: 60px;
     z-index: 100;
     background-color: white;
     font-family: "Monomaniac One", sans-serif;
+    margin-top: -235px;
+    justify-content: space-around;
 }
 
-.bottom_menu > div {
-    float: left;
-    width: 25%;
-    height: 100%;
-    text-align: center;
-    padding-top: 27px;
-    cursor: pointer;
-    transition: background-color 0.3s;
-}
-
-.bottom_menu > div:not(:nth-child(2)) {
+.footer > div:not(:nth-child(2)) {
     opacity: 0.7;
 }
 
-.bottom_menu > div:not(:nth-child(2)) img {
+.footer > div:not(:nth-child(2)) img {
     opacity: 0.7;
 }
 
-.bottom_menu > div:not(:nth-child(2)) p {
+.footer > div:not(:nth-child(2)) p {
     opacity: 0.7;
 }
 
-.bottom_menu img {
-    width: 18px;
-    height: 18px;
+.footer img {
+    width: 22px;
+    height: 22px;
     object-fit: cover;
+    cursor: pointer;
 }
 
-.bottom_menu p {
+.footer p {
     font-size: 14px;
-    line-height: 25px;
-    color: black;
-}
-
-/*예상 소요시간 버튼 css*/
-
-.time-picker{
-    text-align: center;
-}
-
-.time-buttons{
-    margin-top: 10px;
-    text-align: center;
-}
-
-.time-buttons button{
-    margin-top: 10px;
-    border-radius: 10px;
-    background-color: #acada9;
-    border: none;
-    font-size: 14px;
-    width: 100px;
-    height: 28px;
-    font-family: 'NanumSquareRound', sans-serif;
+    color: #333333;
+    margin: 0;
     cursor: pointer;
 }
 
-.estimated-submit{
-    border-radius: 5px;
-    font-family: 'NanumSquareRound', sans-serif;
-    border: none;
-    font-size: 14px;
-    width: 45px;
-    height: 25px;
-    cursor: pointer;
-}
-
-/* 버튼 호버 시 색상 변경 */
-.time-buttons button:hover {
-    background-color: #787977; /* 원하는 색상으로 변경 */
-}
-
-.estimated-submit:hover{
-    background-color: #acada9;
-}
-/* 입력 부분 스타일 변경 */
-#estimatedTime {
-    width: 50px; /* 입력 부분 너비 설정 */
-}
-
-/*시간대 추천 리스트 화면 뒤로가기*/
-#back-button {
-    position: absolute;
-    top: 4px;
-    left: 30px;
-    background-color: transparent;
-    border: none;
-    cursor: pointer;
-    font-size: 30px;
-    color: #000;
-    padding: 10px;
-    font-family: "Monomaniac One", sans-serif;
-}
-
-/*recommend list 꾸미기*/
-.recoLists {
-    line-height: 1.5;
-}
-
-.recoList {
-    border: 1px solid #ccc; /* 테두리 스타일 설정 */
-    border-radius: 10px; /* 테두리의 모서리를 둥글게 만듦 */
-    padding: 15px; /* 내부 여백 설정 */
-    margin-top: 20px;
-    margin-bottom: 20px; /* 각 recoList 요소의 아래쪽 여백 설정 */
-    font-family: 'NanumSquareRound', sans-serif;
-    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1); /* 그림자 효과 추가 */
-    width: 100%;
-    cursor: pointer;
-}
-
-.recoList:hover{
-    background-color: #acada9;
-}

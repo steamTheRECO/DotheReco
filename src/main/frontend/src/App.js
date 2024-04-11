@@ -4,8 +4,7 @@ import StartPage from './StartPage';
 import SignupPage from './SignupPage';
 import LoginPage from './LoginPage';
 import AddNormalSchedulePage from "./AddNormalSchedulePage";
-import Calendar from "./Calendar";
-import Footer from "./Footer";
+import Main from "./Main"
 
 function App() {
     return (
@@ -15,8 +14,7 @@ function App() {
                 <Route path="/signup" element={<SignupPage />} />
                 <Route path="/login" element={<LoginPage />} />
                 <Route path="/addNormalschedule" element={<AddNormalSchedulePage/>} />
-                <Route path="/calendar" element={<Calendar/>}/>
-                <Route path="/footer" element={<Footer/>}/>
+                <Route path="/Main" element={<Main/>}/>
             </Routes>
         </Router>
     );
