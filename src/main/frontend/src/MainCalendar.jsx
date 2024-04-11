@@ -7,6 +7,7 @@ import SettingImage from './images/Setting.png';
 import TimeTableImage from './images/Time table.png';
 import CalendarImage from './images/Calendar.png';
 import TodoListImage from './images/할 일 list.png';
+import before from './images/before.png'
 
 const Main = () => {
     const [date, setDate] = useState(new Date());
@@ -327,13 +328,17 @@ const Main = () => {
                         <div className="day">FRI</div>
                         <div className="day">SAT</div>
                     </div>
-                    <div className="dates">{renderCalendar()}</div>
+<div className="Img-wrap">
+    <img className="beforeImage" src={before}/>
+</div>
                 </div>
+
             </div>
+
             {/*하단 메뉴 바*/}
             <div className="footer">
                 <div className="bottom-menu">
-                    <img className="TimeTableImage" src={TimeTableImage} alt="Time Table"/>
+                <img className="TimeTableImage" src={TimeTableImage} alt="Time Table"/>
                     <p>Time table</p>
                 </div>
                 <div className="bottom-menu">

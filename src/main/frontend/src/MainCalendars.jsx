@@ -7,6 +7,7 @@ import SettingImage from './images/Setting.png';
 import TimeTableImage from './images/Time table.png';
 import CalendarImage from './images/Calendar.png';
 import TodoListImage from './images/할 일 list.png';
+import after from './images/after.png';
 
 const Main = () => {
     const [date, setDate] = useState(new Date());
@@ -143,6 +144,10 @@ const Main = () => {
         navigate('/main');
     };
 
+    const goToAddNormalSchedules = () => {
+        navigate('/addNormalschedules');
+    };
+
     const goBack=()=>{
         document.querySelector('.search-popup-wrap').style.display='block';
         document.querySelector('.searchList-popup-wrap').style.display='none';
@@ -276,9 +281,9 @@ const Main = () => {
                         <p className="dateText">날짜: 2024년 04월 15일 월요일</p>
                         <p className="timeText">시간: 8:00 PM - 11:00 PM</p>
                     </div>
-                    <div className="recoList">
+                    <div className="recoList" onClick={goToAddNormalSchedules}>
                         <p className="dateText">날짜: 2024년 04월 17일 수요일</p>
-                        <p className="timeText">시간: 11:00 AM - 2:00 PM</p>
+                        <p className="timeText" >시간: 11:00 AM - 2:00 PM</p>
                     </div>
                     <div className="recoList">
                         <p className="dateText">날짜: 2024년 04월 17일 수요일</p>
@@ -327,9 +332,13 @@ const Main = () => {
                         <div className="day">FRI</div>
                         <div className="day">SAT</div>
                     </div>
-                    <div className="dates">{renderCalendar()}</div>
+                    <div className="Img-wrap">
+                        <img className="afterImage" src={after}/>
+                    </div>
                 </div>
+
             </div>
+
             {/*하단 메뉴 바*/}
             <div className="footer">
                 <div className="bottom-menu">
