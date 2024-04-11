@@ -168,6 +168,7 @@ const Main = () => {
             if (value !== '') {
                 event.target.value = value + '시간'; // 입력된 값 뒤에 "시간" 추가
             }
+            inputField.removeEventListener('blur', handleBlur);
         };
 
         // 'input' 이벤트 리스너 등록
