@@ -1,3 +1,4 @@
+
 #addNor-back-button {
     position: absolute;
     top: 20px;
@@ -12,19 +13,25 @@
     font-family: "Monomaniac One", sans-serif;
 }
 
+
 .addNor-h1{
     font-size: 18px;
+
     font-weight: 900;
     color: #303030;
     line-height: 30px;
     text-align: center;
     margin-top: 32px;
+
     font-family: 'NanumSquareRound',sans-serif;
+
     font-weight: 500;
 }
 
 /* 제출 버튼 */
+
 .addNor-submit {
+
     background-color: #ffffff;
     color: #000;
     border: none;
@@ -38,6 +45,7 @@
 }
 
 .addNor-container {
+
     position: relative;
     max-width: 500px; /* 최대 너비 지정 */
     width: 80%;
@@ -45,13 +53,17 @@
     margin-top: 30px;
 }
 
+
 .addNor-input-container{
+
     margin-top: 10px;
 }
 
 input{
+
     font-size: 10px;
     font-family: 'NanumSquareRound',sans-serif;
+
 }
 
 #date-input, #location-input, #category-input {
@@ -105,7 +117,9 @@ input#location-input::placeholder {
     font-family: 'NanumSquareRound', sans-serif; /* 폰트 설정 */
 }
 
+
 .addNor-repeat-toggle{
+
     box-sizing: border-box;
     position: relative;
 
@@ -117,7 +131,9 @@ input#location-input::placeholder {
     font-size: 12px;
 }
 
+
 .addNor-time-toggle{
+
     position: relative;
     left: 5px;
     display: inline-flex;
@@ -189,11 +205,14 @@ input#location-input::placeholder {
     box-shadow: 0 0 0 max(4px, 0.2em) lightgray;
 }
 
+
 .addNor-date-picker {
+
     display: flex;
     align-items: center;
     font-family: 'NanumSquareRound', sans-serif;
 }
+
 
 .addNor-date-range-divider {
     margin-top: -14px;
@@ -201,6 +220,7 @@ input#location-input::placeholder {
 }
 
 .addNor-date-picker-holder
+
 {
     z-index: 9999 !important;
     position: fixed;
@@ -213,7 +233,9 @@ input#location-input::placeholder {
     text-align: center;
 }
 
+
 .addNor-date-picker-table {
+
     cursor: pointer;
     z-index: 99999 !important;
     position: fixed;
@@ -229,24 +251,32 @@ input#location-input::placeholder {
     overflow: auto; /* 스크롤 설정 */
 }
 
+
 .addNor-date-picker-table table {
+
     width: 100%;
     border-collapse: collapse; /* 테이블 경계 스타일 설정 */
 }
 
+
 .addNor-date-picker-table td
+
 {
     padding: 10px;
     text-align: center;
 }
 
 @media only screen and (max-width: 768px) {
+
     .addNor-date-picker-table {
+
         max-width: 90%;
         max-height: 90%;
     }
 }
+
 .addNor-datetime-picker{
+
     display: none;
     font-family: 'NanumSquareRound', sans-serif;
     border: none;
@@ -255,7 +285,9 @@ input#location-input::placeholder {
     align-items: center;
 }
 
+
 .addNor-datetime-range-divider {
+
     display: flex;
     align-items: center;
     margin-top: -14px;
@@ -266,7 +298,9 @@ a {
     color: inherit; /* 링크 텍스트의 색상을 상속하여 기존 스타일 유지 */
 }
 
+
 .addNor-arrow-icon a {
+
     text-decoration: none; /* 링크 텍스트의 밑줄 제거 */
     color: #000; /* 링크 텍스트 색상 지정 */
 }
