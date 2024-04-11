@@ -85,7 +85,7 @@ const AddNormalSchedulePage = () => {
                 </div>
                 <div className="addNor-input-container">
                     <label htmlFor="memo-input">메모</label>
-                    <textarea id="memo-input" className="memo-input" rows="4" placeholder="메모" style={{ flex: 4 }} className="addNor-memo-input"></textarea>
+                    <textarea id="memo-input" className="addNor-memo-input" rows="4" placeholder="메모" style={{ flex: 4 }} ></textarea>
                 </div>
             </div>
         </div>
