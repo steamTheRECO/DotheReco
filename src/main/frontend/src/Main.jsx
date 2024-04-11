@@ -162,6 +162,7 @@ const Main = () => {
             event.target.value = formattedValue; // 숫자만 입력된 값으로 설정
         };
 
+        /*
         // 'blur' 이벤트 발생 시 호출될 이벤트 핸들러
         const handleBlur = (event) => {
             const value = event.target.value.trim(); // 앞뒤 공백 제거
@@ -169,7 +170,7 @@ const Main = () => {
                 event.target.value = value + '시간'; // 입력된 값 뒤에 "시간" 추가
             }
             inputField.removeEventListener('blur', handleBlur);
-        };
+        };*/
 
         // 'input' 이벤트 리스너 등록
         inputField.addEventListener('input', handleInput);
