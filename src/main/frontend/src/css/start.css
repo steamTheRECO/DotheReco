@@ -20,7 +20,7 @@
     text-align: center;
     font-style:normal;
     font-family: "Monomaniac One", sans-serif;
-    font-weight: 500;
+    margin-top: 10px;
 }
 
 .start-button {
@@ -37,7 +37,6 @@
     width: 100px;
     font-family: "Monomaniac One", sans-serif;
     font-size: 18px;
-    font-weight: normal;
 }
 
 .start-button:hover {
