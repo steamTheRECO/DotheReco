@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from "react-router-dom";
-import axios from 'axios';
 import flatpickr from 'flatpickr';
 import 'flatpickr/dist/flatpickr.min.css';
 import './css/addNormalCal.css'; // CSS 파일 import
@@ -18,7 +17,6 @@ const AddNormalSchedulePage = () => {
     });
     const [message, setMessage] = useState('');
     const [isTimeToggleOn, setIsTimeToggleOn] = useState(false);
-    const [categoryColor, setCategoryColor] = useState({}); // 카테고리별 색상 상태 추가
     const navigate = useNavigate();
 
     const handleInputChange = (event) => {
@@ -46,9 +44,6 @@ const AddNormalSchedulePage = () => {
             storedEvents.push(formattedData);
             localStorage.setItem('events', JSON.stringify(storedEvents));
 
-            // 콘솔 로그로 확인
-            console.log('Navigating with new event:', formattedData);
-
             navigate('/Main', { state: { newEvent: formattedData } });
         } catch (error) {
             console.error('Error response:', error.response);
@@ -61,40 +56,58 @@ const AddNormalSchedulePage = () => {
     };
 
     useEffect(() => {
-        // 카테고리에 따른 색상 정의
-        const colors = {
-        };
-        setCategoryColor(colors);
-    }, []);
-
-    useEffect(() => {
-        const dateConfig = {
+        const startDateConfig = {
             dateFormat: "Y-m-d",
             onChange: (selectedDates, dateStr) => {
                 setScheduleData(prevData => ({
                     ...prevData,
                     fixedStartDay: dateStr,
+                }));
+            },
+        };
+        flatpickr("input.startdate-picker", startDateConfig);
+
+        const endDateConfig = {
+            dateFormat: "Y-m-d",
+            onChange: (selectedDates, dateStr) => {
+                setScheduleData(prevData => ({
+                    ...prevData,
                     fixedEndDay: dateStr,
                 }));
             },
         };
-        flatpickr("input.startdate-picker", dateConfig);
-        flatpickr("input.enddate-picker", dateConfig);
+        flatpickr("input.enddate-picker", endDateConfig);
 
-        const datetimeConfig = {
-            enableTime: true,
-            dateFormat: "Y-m-d H:i",
-            onChange: (selectedDates, dateStr) => {
-                setScheduleData(prevData => ({
-                    ...prevData,
-                    fixedStartTime: dateStr,
-                    fixedEndTime: dateStr,
-                }));
-            },
-        };
-        flatpickr("input.startdatetime-picker", datetimeConfig);
-        flatpickr("input.enddatetime-picker", datetimeConfig);
-    }, []);
+        if (isTimeToggleOn) {
+            const startTimeConfig = {
+                enableTime: true,
+                noCalendar: true,
+                dateFormat: "H:i",
+                time_24hr: true,
+                onChange: (selectedDates, dateStr) => {
+                    setScheduleData(prevData => ({
+                        ...prevData,
+                        fixedStartTime: dateStr,
+                    }));
+                },
+            };
+            flatpickr("input.starttime-picker", startTimeConfig);
+
+            const endTimeConfig = {
+                enableTime: true,
+                noCalendar: true,
+                dateFormat: "H:i",
+                time_24hr: true,
+                onChange: (selectedDates, dateStr) => {
+                    setScheduleData(prevData => ({
+                        ...prevData,
+                        fixedEndTime: dateStr,
+                    }));
+                },
+            };
+            flatpickr("input.endtime-picker", endTimeConfig);
+        }
+    }, [isTimeToggleOn]);
 
     return (
         <div className="addNor-gray-box">
@@ -105,12 +118,6 @@ const AddNormalSchedulePage = () => {
             <h1 className="addNor-h1">일반스케줄 추가</h1>
             <form className="addNor-form" id="addNor-form" onSubmit={handleSubmit}>
                 <div className="addNor-container">
-                    <div className="addNor-input-container">
-                        <div className="addNor-repeat-toggle">
-                            <span>반복 설정</span>
-                            <input className="addNor-repeat-toggle" role="switch" type="checkbox" id="repeat-toggle"/>
-                        </div>
-                    </div>
                     <div className="addNor-input-container">
                         <label htmlFor="fixedTitle">제목</label>
                         <input type="text" className="fixedTitle" name="fixedTitle" id="fixedTitle" placeholder="제목"
@@ -124,21 +131,23 @@ const AddNormalSchedulePage = () => {
                                    checked={isTimeToggleOn} onChange={handleToggleChange}/>
                         </div>
                         <div className={`addNor-date-picker ${isTimeToggleOn ? 'hidden' : ''}`} id="addNor-date-picker">
-                            <input className="startdate-picker" name="fixedStartDay" id="fixedStartDay" type="date"
+                            <input className="startdate-picker" name="fixedStartDay" id="fixedStartDay" type="text"
                                    placeholder="시작 날짜" value={scheduleData.fixedStartDay} onChange={handleInputChange}/>
                             <span className="date-range-divider">~</span>
-                            <input className="enddate-picker" name="fixedEndDay" id="fixedEndDay" type="date"
+                            <input className="enddate-picker" name="fixedEndDay" id="fixedEndDay" type="text"
                                    placeholder="종료 날짜" value={scheduleData.fixedEndDay} onChange={handleInputChange}/>
                         </div>
                         <div className={`addNor-datetime-picker ${isTimeToggleOn ? '' : 'hidden'}`}
                              id="addNor-datetime-picker">
-                            <input className="startdatetime-picker" name="fixedStartTime" id="fixedStartTime"
-                                   type="datetime-local" placeholder="시작 날짜 및 시간" value={scheduleData.fixedStartTime}
-                                   onChange={handleInputChange}/>
-                            <span className="datetime-range-divider">~</span>
-                            <input className="enddatetime-picker" name="fixedEndTime" id="fixedEndTime"
-                                   type="datetime-local" placeholder="종료 날짜 및 시간" value={scheduleData.fixedEndTime}
-                                   onChange={handleInputChange}/>
+                            <input className="startdate-picker" name="fixedStartDay" id="fixedStartDay" type="text"
+                                   placeholder="시작 날짜" value={scheduleData.fixedStartDay} onChange={handleInputChange}/>
+                            <input className="starttime-picker" name="fixedStartTime" id="fixedStartTime" type="text"
+                                   placeholder="시작 시간" value={scheduleData.fixedStartTime} onChange={handleInputChange}/>
+                            <span className="date-range-divider">~</span>
+                            <input className="enddate-picker" name="fixedEndDay" id="fixedEndDay" type="text"
+                                   placeholder="종료 날짜" value={scheduleData.fixedEndDay} onChange={handleInputChange}/>
+                            <input className="endtime-picker" name="fixedEndTime" id="fixedEndTime" type="text"
+                                   placeholder="종료 시간" value={scheduleData.fixedEndTime} onChange={handleInputChange}/>
                         </div>
                     </div>
                     <div className="addNor-input-container">

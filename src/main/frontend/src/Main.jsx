@@ -7,18 +7,19 @@ import SettingImage from './images/Setting.png';
 import TimeTableImage from './images/Time table.png';
 import CalendarImage from './images/Calendar.png';
 import TodoListImage from './images/할 일 list.png';
-import TimePicker from './TimePicker';
 
 const Main = () => {
     const [date, setDate] = useState(new Date());
     const [mini_date, mini_setDate] = useState(new Date());
     const [selectedMiniDates, setSelectedMiniDates] = useState([]);
-    const [estimatedTime, setEstimatedTime] = useState({ hour: '01', minute: '00' });
     const navigate = useNavigate();
     const [isDragging, setIsDragging] = useState(false);
     const selectedDatesRef = useRef(new Set());
     const [events, setEvents] = useState([]);
     const location = useLocation();
+
+    const [showEstimatedPicker, setShowEstimatedPicker] = useState(false);
+    const [selectedEstimated, setSelectedEstimated] = useState('');
 
     const getCategoryColor = (categoryCode) => {
         // 카테고리 코드에 따라 다른 색상을 반환
@@ -51,11 +52,8 @@ const Main = () => {
             });
             // 중복된 이벤트가 없는 경우에만 추가합니다.
             if (!existingEvent) {
-                // 기존 이벤트 목록에 새로운 이벤트를 추가하여 새로운 배열을 만듭니다.
                 const updatedEvents = [...storedEvents, newEvent];
-                // 이벤트 목록을 업데이트합니다.
                 setEvents(updatedEvents);
-                // 로컬 스토리지에 업데이트된 이벤트 목록을 저장합니다.
                 localStorage.setItem('events', JSON.stringify(updatedEvents));
             }
         }
@@ -96,20 +94,25 @@ const Main = () => {
             const eventList = events.filter(event => {
                 const eventStartDate = new Date(event.fixedStartDay);
                 return eventStartDate.toDateString() === currentDate.toDateString();
+            }).sort((a, b) => {
+                // 이벤트를 시작 시간 순으로 정렬합니다.
+                const aStartTime = new Date(`${a.fixedStartDay}T${a.fixedStartTime}`);
+                const bStartTime = new Date(`${b.fixedStartDay}T${b.fixedStartTime}`);
+                return aStartTime - bStartTime;
             });
 
             return (
                 <div key={index} className={`day ${isToday ? 'today' : ''}`}>
                     {day}
                     <div className="event-indicator-container">
-                        {eventList.map((event, index) => (
+                        {eventList.map((event, eventIndex) => (
                             <div
-                                key={index}
+                                key={eventIndex}
                                 className="event-indicator"
                                 style={{
-                                        top: `${(index + 1) * 25}px`,
-                                        backgroundColor: getCategoryColor(event.categoryCode)
-                                    }}
+                                    top: `${(eventIndex + 1) * 25}px`,
+                                    backgroundColor: getCategoryColor(event.categoryCode)
+                                }}
                             >
                                 <div className="event-title">{event.fixedTitle}</div>
                             </div>
@@ -119,7 +122,6 @@ const Main = () => {
             );
         });
     };
-
 
     const prevMonth = () => {
         const prevMonthDate = new Date(date.getFullYear(), date.getMonth() - 1, 1);
@@ -219,23 +221,36 @@ const Main = () => {
         document.querySelector('.back-bg').style.display = 'block';
     };
 
-    const goToAddNormalSchedule = () => {
+    const goToaddNormalSchedule = () => {
         // "일반 스케줄 추가" 버튼을 누를 때 기존의 일정들을 유지하기 위해 새로운 이벤트를 추가하지 않습니다.
         navigate('/addNormalSchedule', { state: { events: events } });
     };
+
+    const goToAddFlexSchedule = () => {
+        // "일반 스케줄 추가" 버튼을 누를 때 기존의 일정들을 유지하기 위해 새로운 이벤트를 추가하지 않습니다.
+        navigate('/addFlexSchedule', { state: { events: events } });
+    };
+
+    const goToTimeLine=()=>{
+        navigate('/timeLine');
+    }
 
     const goToCalendar = () => {
         navigate('/Main');
     };
 
+    const goToToDoList=()=>{
+        navigate('/ToDoList');
+    }
+
+    const goToSetting=()=>{
+        navigate('/Setting');
+    }
+
     const goBack = () => {
         document.querySelector('.search-popup-wrap').style.display = 'block';
         document.querySelector('.searchList-popup-wrap').style.display = 'none';
         document.querySelector('.back-bg').style.display = 'block';
-    };
-
-    const handleTimeChange = (hour, minute) => {
-        setEstimatedTime({ hour, minute });
     };
 
     useEffect(() => {
@@ -253,11 +268,21 @@ const Main = () => {
         setEvents(storedEvents);
     }, []);
 
+    const handleEstimatedClick = () => {
+        setShowEstimatedPicker(true);
+    };
+
+    const handleEstimatedChange = () => {
+        const hours = document.getElementById('main-estimated-hours').value || '00';
+        const minutes = document.getElementById('main-estimated-minutes').value || '00';
+        setSelectedEstimated(`${hours}:${minutes}`);
+        setShowEstimatedPicker(false);
+    };
 
     return (
         <div className="main-gray-box">
             {/*우측 상단 이미지*/}
-            <div className="top-right-images">
+            <div className="main-top-right-images">
                 <img id="popup-search" src={searchImage} alt="Search" onClick={onSearchClick}/>
                 <img id="popup-addSchedule" src={addScheduleImage} alt="Add Schedule" onClick={onAddScheduleClick}/>
             </div>
@@ -294,9 +319,31 @@ const Main = () => {
                 <div className="search-time-popup-wrap">
                     <div className="estimatedTime-inputField">
                         <label>예상소요시간</label>
-                        <TimePicker onTimeChange={handleTimeChange}/>
+                        <input type="text" className="mainTimePicker" name="mainTimePicker" id="mainTimePicker"
+                               placeholder="시간 선택" value={selectedEstimated}
+                               onClick={handleEstimatedClick} readOnly/>
+                        <button className="estimated-submit" type="submit" onClick={onRecommendClick}>추천</button>
                     </div>
-                    <button className="estimated-submit" type="submit" onClick={onRecommendClick}>추천</button>
+                    {showEstimatedPicker && (
+                        <div className="main-estimated-picker-overlay" onClick={() => setShowEstimatedPicker(false)}>
+                            <div className="main-estimated-picker" onClick={e => e.stopPropagation()}>
+                                <label>시간 선택</label>
+                                <div>
+                                    <select id="main-estimated-hours">
+                                        {[...Array(12).keys()].map(i => (
+                                            <option key={i + 1} value={i + 1}>{i + 1}</option>
+                                        ))}
+                                    </select> :
+                                    <select id="main-estimated-minutes">
+                                        {[...Array(12).keys()].map(i => (
+                                            <option key={i * 5} value={(i * 5).toString().padStart(2, '0')}>{(i * 5).toString().padStart(2, '0')}</option>
+                                        ))}
+                                    </select>
+                                </div>
+                                <button onClick={handleEstimatedChange}>확인</button>
+                            </div>
+                        </div>
+                    )}
                 </div>
             </div>
 
@@ -311,8 +358,8 @@ const Main = () => {
             {/*addSchedule 눌렀을 때 뜨는 팝업 창*/}
             <div className="addSche-popup-wrap">
                 <div className="addSche-button-container">
-                    <button className="addNormalSchedule-Button" onClick={goToAddNormalSchedule}>일반 스케줄 추가</button>
-                    <button>유동 스케줄 추가</button>
+                    <button className="addNormalSchedule-Button" onClick={goToaddNormalSchedule}>일반 스케줄 추가</button>
+                    <button className="addFlexSchedule-Button" onClick={goToAddFlexSchedule}>유동 스케줄 추가</button>
                     <button>리마인더 추가</button>
                 </div>
             </div>
@@ -346,7 +393,7 @@ const Main = () => {
             {/*하단 메뉴 바*/}
             <div className="menu">
                 <div className="menu-details">
-                    <img className="TimeTableImage" src={TimeTableImage} alt="Time Table"/>
+                    <img className="TimeTableImage" src={TimeTableImage} alt="Time Table" onClick={goToTimeLine}/>
                     <p>Time table</p>
                 </div>
                 <div className="menu-details">
@@ -354,11 +401,11 @@ const Main = () => {
                     <p>Calendar</p>
                 </div>
                 <div className="menu-details">
-                    <img className="TodoListImage" src={TodoListImage} alt="To Do List"/>
+                    <img className="TodoListImage" src={TodoListImage} alt="To Do List" onClick={goToToDoList}/>
                     <p>To Do list</p>
                 </div>
                 <div className="menu-details">
-                    <img className="SettingImage" src={SettingImage} alt="Setting"/>
+                    <img className="SettingImage" src={SettingImage} alt="Setting" onClick={goToSetting}/>
                     <p>Setting</p>
                 </div>
             </div>

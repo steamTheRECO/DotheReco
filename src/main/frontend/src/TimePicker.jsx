@@ -1,71 +1,49 @@
-// Main 컴포넌트에서 handleTimeChange 함수 삭제
-
-// TimePicker 컴포넌트의 코드 수정
+// components/TimePicker.js
 import React, { useState } from 'react';
 import './css/TimePicker.css';
 
-const TimePicker = ({ onTimeChange }) => {
-    const hours = Array.from({ length: 12 }, (_, i) => (i + 1).toString().padStart(2, '0'));
-    const minutes = Array.from({ length: 12 }, (_, i) => (i * 5).toString().padStart(2, '0'));
+const TimePicker = ({ onTimeSelect }) => {
+    const [showPicker, setShowPicker] = useState(false);
 
-    const [selectedHour, setSelectedHour] = useState(hours[0]);
-    const [selectedMinute, setSelectedMinute] = useState(minutes[0]);
-    const [showHourList, setShowHourList] = useState(false);
-    const [showMinuteList, setShowMinuteList] = useState(false);
-
-    const handleHourChange = (hour) => {
-        setSelectedHour(hour);
-        setShowHourList(false);
-        onTimeChange(hour, selectedMinute); // 시간이 변경될 때마다 onTimeChange 콜백 호출
+    const handleDurationClick = () => {
+        setShowPicker(true);
     };
 
-    const handleMinuteChange = (minute) => {
-        setSelectedMinute(minute);
-        setShowMinuteList(false);
-        onTimeChange(selectedHour, minute); // 분이 변경될 때마다 onTimeChange 콜백 호출
+    const handleDurationChange = () => {
+        const hours = document.getElementById('duration-hours').value || '00';
+        const minutes = document.getElementById('duration-minutes').value || '00';
+        onTimeSelect(`${hours}:${minutes}`);
+        setShowPicker(false);
     };
 
     return (
-        <div className="time-picker">
-            <div className="selected-time">
-                <div
-                    className="selected-time-hour"
-                    onClick={() => setShowHourList(!showHourList)}
-                >
-                    {selectedHour}
-                </div>
-                :
-                <div
-                    className="selected-time-minute"
-                    onClick={() => setShowMinuteList(!showMinuteList)}
-                >
-                    {selectedMinute}
-                </div>
-            </div>
-            {showHourList && (
-                <div className="time-picker-column">
-                    {hours.map((hour) => (
-                        <div
-                            key={hour}
-                            className={`time-picker-item ${hour === selectedHour ? 'selected' : ''}`}
-                            onClick={() => handleHourChange(hour)}
-                        >
-                            {hour}
+        <div>
+            <input
+                type="text"
+                className="time-picker-input"
+                placeholder="시간 선택"
+                onClick={handleDurationClick}
+                readOnly
+            />
+            {showPicker && (
+                <div className="time-picker-overlay" onClick={() => setShowPicker(false)}>
+                    <div className="time-picker" onClick={(e) => e.stopPropagation()}>
+                        <label>시간 선택</label>
+                        <div>
+                            <select id="duration-hours">
+                                {[...Array(12).keys()].map(i => (
+                                    <option key={i + 1} value={i + 1}>{i + 1}</option>
+                                ))}
+                            </select>
+                            :
+                            <select id="duration-minutes">
+                                {[...Array(12).keys()].map(i => (
+                                    <option key={i * 5} value={(i * 5).toString().padStart(2, '0')}>{(i * 5).toString().padStart(2, '0')}</option>
+                                ))}
+                            </select>
                         </div>
-                    ))}
-                </div>
-            )}
-            {showMinuteList && (
-                <div className="time-picker-column">
-                    {minutes.map((minute) => (
-                        <div
-                            key={minute}
-                            className={`time-picker-item ${minute === selectedMinute ? 'selected' : ''}`}
-                            onClick={() => handleMinuteChange(minute)}
-                        >
-                            {minute}
-                        </div>
-                    ))}
+                        <button onClick={handleDurationChange}>확인</button>
+                    </div>
                 </div>
             )}
         </div>

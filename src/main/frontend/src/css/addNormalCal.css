@@ -13,7 +13,6 @@
     padding: 10px;
     font-family: "Monomaniac One", sans-serif;
     font-weight: normal;
-
 }
 
 .addNor-h1 {
@@ -55,7 +54,7 @@
 .addNor-input-container {
     margin-top: 10px;
     font-family: 'NanumSquareRound', sans-serif;
-    width: 80%;
+    width: 70%;
     display: flex;
     flex-direction: column;
 }
@@ -186,6 +185,7 @@
 }
 
 .addNor-time-toggle {
-    justify-content: flex-end; /* Align the toggle to the right */
+    justify-content: start; /* Align the toggle to the right */
+    margin-top: 10px;
 }
 
