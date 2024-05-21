@@ -7,7 +7,7 @@ import './css/addFlexCal.css';
 import { FaStar } from 'react-icons/fa';
 
 const AddFlexSchedulePage = () => {
-    const { id } = useParams(); // Get the ID from the URL
+    const { id } = useParams();
     const [scheduleData, setScheduleData] = useState({
         flexTitle: '',
         flexDuration: '',
@@ -25,11 +25,21 @@ const AddFlexSchedulePage = () => {
 
     useEffect(() => {
         if (id) {
-            const storedEvents = JSON.parse(localStorage.getItem('events')) || [];
-            const eventToEdit = storedEvents[id];
-            if (eventToEdit) {
-                setScheduleData(eventToEdit);
-            }
+            axios.get(`http://localhost:8080/api/unfixed-schedules/${id}`)
+                .then(response => {
+                    const eventToEdit = response.data;
+                    setScheduleData({
+                        flexTitle: eventToEdit.unfixedTitle,
+                        flexDuration: eventToEdit.unfixedTime,
+                        flexDeadline: eventToEdit.unfixedDeadline,
+                        flexMemo: eventToEdit.unfixedMemo,
+                        categoryCode: eventToEdit.category ? eventToEdit.category.categoryCode : '',
+                        placeCode: eventToEdit.place ? eventToEdit.place.placeCode : '',
+                        importance: eventToEdit.unfixedImportance,
+                        repeatDays: []
+                    });
+                })
+                .catch(error => console.error('Error fetching the event data:', error));
         }
     }, [id]);
 
@@ -55,8 +65,8 @@ const AddFlexSchedulePage = () => {
     };
 
     const handleDurationChange = () => {
-        const hours = document.getElementById('duration-hours').value || '00';
-        const minutes = document.getElementById('duration-minutes').value || '00';
+        const hours = document.getElementById('duration-hours').value.padStart(2, '0');
+        const minutes = document.getElementById('duration-minutes').value.padStart(2, '0');
         setScheduleData((prevData) => ({
             ...prevData,
             flexDuration: `${hours}:${minutes}`
@@ -67,28 +77,37 @@ const AddFlexSchedulePage = () => {
     const handleSubmit = async (event) => {
         event.preventDefault();
         try {
+            const hours = scheduleData.flexDuration.split(':')[0].padStart(2, '0');
+            const minutes = scheduleData.flexDuration.split(':')[1].padStart(2, '0');
+            const formattedDuration = `${hours}:${minutes}:00`;
+
             const formattedData = {
-                ...scheduleData,
-                flexDeadline: scheduleData.flexDeadline + ":00",
-                categoryCode: scheduleData.categoryCode ? parseInt(scheduleData.categoryCode, 10) : null,
-                placeCode: scheduleData.placeCode ? parseInt(scheduleData.placeCode, 10) : null,
+                unfixedTitle: scheduleData.flexTitle,
+                scheduleDate: scheduleData.flexDeadline.split('T')[0],
+                unfixedTime: formattedDuration, // 올바른 LocalTime 형식
+                unfixedDeadline: scheduleData.flexDeadline.split('T')[0],
+                unfixedMemo: scheduleData.flexMemo,
+                categoryId: scheduleData.categoryCode ? parseInt(scheduleData.categoryCode, 10) : null,
+                placeId: scheduleData.placeCode ? parseInt(scheduleData.placeCode, 10) : null,
+                unfixedImportance: scheduleData.importance,
+                reminderMark: false
             };
 
-            const storedEvents = JSON.parse(localStorage.getItem('events')) || [];
+            let response;
             if (id) {
-                storedEvents[id] = formattedData;
+                response = await axios.put(`http://localhost:8080/api/unfixed-schedules/${id}`, formattedData);
             } else {
-                storedEvents.push(formattedData);
+                response = await axios.post('http://localhost:8080/api/unfixed-schedules', formattedData);
             }
-            localStorage.setItem('events', JSON.stringify(storedEvents));
 
-            console.log('Navigating with new event:', formattedData);
-            navigate('/Main', { state: { newEvent: formattedData } });
+            console.log('Navigating with new event:', response.data);
+            navigate('/Main', { state: { newEvent: response.data } });
         } catch (error) {
             console.error('Error response:', error.response);
             setMessage('일정 추가에 실패했습니다. 서버 오류가 발생했습니다.');
         }
     };
+
 
     useEffect(() => {
         const colors = {};
@@ -98,7 +117,7 @@ const AddFlexSchedulePage = () => {
     useEffect(() => {
         const datetimeConfig = {
             enableTime: true,
-            dateFormat: "Y-m-d H:i",
+            dateFormat: "Y-m-d\\TH:i",
             onChange: (selectedDates, dateStr) => {
                 setScheduleData(prevData => ({
                     ...prevData,

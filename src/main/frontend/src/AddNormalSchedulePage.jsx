@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import flatpickr from 'flatpickr';
 import 'flatpickr/dist/flatpickr.min.css';
 import './css/addNormalCal.css'; // CSS 파일 import
-
+import axios from 'axios'; // axios import
 const AddNormalSchedulePage = () => {
     const [scheduleData, setScheduleData] = useState({
         fixedTitle: '',
@@ -26,7 +26,7 @@ const AddNormalSchedulePage = () => {
             [name]: value,
         }));
     };
-
+/*
     const handleSubmit = async (event) => {
         event.preventDefault();
         try {
@@ -49,7 +49,28 @@ const AddNormalSchedulePage = () => {
             console.error('Error response:', error.response);
             setMessage('일정 추가에 실패했습니다. 서버 오류가 발생했습니다.');
         }
+    };*/
+    const handleSubmit = async (event) => {
+        event.preventDefault();
+        try {
+            const formattedData = {
+                ...scheduleData,
+                fixedStartDay: scheduleData.fixedStartDay,
+                fixedEndDay: scheduleData.fixedEndDay,
+                fixedStartTime: scheduleData.fixedStartTime ? scheduleData.fixedStartTime + ":00" : "00:00:00",
+                fixedEndTime: scheduleData.fixedEndTime ? scheduleData.fixedEndTime + ":00" : "00:00:00",
+                categoryCode: scheduleData.categoryCode ? parseInt(scheduleData.categoryCode, 10) : null,
+                placeCode: scheduleData.placeCode ? parseInt(scheduleData.placeCode, 10) : null,
+            };
+
+            await axios.post('http://localhost:8080/api/fixed', formattedData); // 백엔드 서버로 데이터 전송
+            navigate('/Main', { state: { newEvent: formattedData } });
+        } catch (error) {
+            console.error('Error response:', error.response);
+            setMessage('일정 추가에 실패했습니다. 서버 오류가 발생했습니다.');
+        }
     };
+
 
     const handleToggleChange = () => {
         setIsTimeToggleOn(!isTimeToggleOn);
