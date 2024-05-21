@@ -238,7 +238,7 @@ const Timeline = () => {
                                                 key={index}
                                                 style={{
                                                     top: `${startMinute}px`,
-                                                    height: `${duration * 1.5}px`, // Each minute is 2 pixels
+                                                    height: `${duration * 1.4}px`, // Each minute is 2 pixels
                                                     backgroundColor: getCategoryColor(item.category)
                                                 }}
                                             >
