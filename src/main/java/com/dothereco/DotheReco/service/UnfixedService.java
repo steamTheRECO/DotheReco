@@ -7,8 +7,10 @@ import com.dothereco.DotheReco.repository.UnfixedRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class UnfixedService {
@@ -38,7 +40,12 @@ public class UnfixedService {
 
     // 모든 유동 스케줄 조회
     public List<Unfixed> getAllUnfixed() {
-        return unfixedRepository.findAll();
+        List<Unfixed> allUnfixed = unfixedRepository.findAll();
+        return allUnfixed.stream()
+                .sorted(Comparator.comparing(Unfixed::isUnfixedCompleted)
+                        .thenComparing(Unfixed::getScheduleDate))
+                .collect(Collectors.toList());
+
     }
 
     // 특정 유동 스케줄 조회

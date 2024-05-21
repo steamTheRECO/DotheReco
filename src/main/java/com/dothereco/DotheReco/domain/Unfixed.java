@@ -60,4 +60,8 @@ public class Unfixed {
 
     @OneToMany(mappedBy = "unfixedList1")
     private List<Connection1> connections1 = new ArrayList<>();
+
+    public boolean isUnfixedCompleted() {
+        return Boolean.TRUE.equals(unfixedCompleted); // Null-safe check
+    }
 }
