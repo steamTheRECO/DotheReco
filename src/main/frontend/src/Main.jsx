@@ -67,8 +67,8 @@ const Main = () => {
         const viewMonth = date.getMonth();
         const daysInMonth = new Date(viewYear, viewMonth + 1, 0).getDate();
         const startDay = new Date(viewYear, viewMonth, 1).getDay();
-        const days = [];
 
+        const days = [];
         // 캘린더에 빈 칸을 추가합니다.
         for (let i = 0; i < startDay; i++) {
             days.push('');
@@ -91,6 +91,7 @@ const Main = () => {
         return days.map((day, index) => {
             const currentDate = new Date(viewYear, viewMonth, day);
             const isToday = new Date().toDateString() === currentDate.toDateString();
+            const flexEvents = events.filter(event => event.flexDeadline && new Date(event.flexDeadline).toDateString() === currentDate.toDateString());
             const eventList = events.filter(event => {
                 const eventStartDate = new Date(event.fixedStartDay);
                 return eventStartDate.toDateString() === currentDate.toDateString();
@@ -105,6 +106,20 @@ const Main = () => {
                 <div key={index} className={`day ${isToday ? 'today' : ''}`}>
                     {day}
                     <div className="event-indicator-container">
+                        {/* 유동 스케줄 표시 */}
+                        {flexEvents.map((event, eventIndex) => (
+                            <div
+                                key={eventIndex}
+                                className="event-indicator"
+                                style={{
+                                    top: `${(eventIndex + 1) * 25}px`,
+                                    backgroundColor: getCategoryColor(event.categoryCode)
+                                }}
+                            >
+                                <div className="event-title">{event.flexTitle}</div>
+                            </div>
+                        ))}
+                        {/* 일반 스케줄 표시 */}
                         {eventList.map((event, eventIndex) => (
                             <div
                                 key={eventIndex}
@@ -390,6 +405,7 @@ const Main = () => {
                     <div className="dates">{renderCalendar()}</div>
                 </div>
             </div>
+
             {/*하단 메뉴 바*/}
             <div className="menu">
                 <div className="menu-details">

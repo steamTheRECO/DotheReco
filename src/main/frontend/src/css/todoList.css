@@ -75,6 +75,8 @@
     display: flex;
     flex-direction: column;
     border: 1px solid #ddd;
+    font-size: 14px;
+    font-family: 'NanumSquareRound',sans-serif;
     padding: 7px 15px;
     margin-bottom: 7px;
     border-radius: 15px;
@@ -119,7 +121,6 @@
 .todolist-schedule-container::-webkit-scrollbar-thumb:hover {
     background: #555; /* 스크롤바 호버 시 색상 변경 */
 }
-
 
 /*하단 메뉴바*/
 .menu {
