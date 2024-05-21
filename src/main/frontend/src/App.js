@@ -4,6 +4,7 @@ import StartPage from './StartPage';
 import SignupPage from './SignupPage';
 import LoginPage from './LoginPage';
 import AddNormalSchedulePage from "./AddNormalSchedulePage";
+
 import AddFlexSchedulePage from "./AddFlexSchedulePage";
 import Main from "./Main"
 import TimeLinePage from "./TimeLinePage";
@@ -11,6 +12,8 @@ import TimePicker from "./TimePicker";
 import ToDoListPage from "./ToDoListPage";
 import RecommendationPage from "./RecommendationPage";
 import SettingPage from "./SettingPage";
+import TmapComponent from "./TmapComponent";
+
 
 function App() {
     return (
@@ -20,8 +23,9 @@ function App() {
                 <Route path="/signup" element={<SignupPage />} />
                 <Route path="/login" element={<LoginPage />} />
                 <Route path="/addNormalschedule" element={<AddNormalSchedulePage/>} />
-                <Route path="/addFlexschedule" element={<AddFlexSchedulePage/>} />
                 <Route path="/Main" element={<Main/>}/>
+                <Route path="/Map" element={<TmapComponent/>} /> {/* TmapComponent 추가 */}
+                <Route path="/addFlexschedule" element={<AddFlexSchedulePage/>} />
                 <Route path="/TimeLine" element={<TimeLinePage/>} />
                 <Route path="/TimePicker" element={<TimePicker/>} />
                 <Route path="/ToDoList" element={<ToDoListPage />} />
