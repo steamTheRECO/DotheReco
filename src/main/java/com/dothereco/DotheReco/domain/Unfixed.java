@@ -3,8 +3,8 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.sql.Date;
-import java.sql.Time;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,13 +26,13 @@ public class Unfixed {
     private String unfixedTitle;
 
     @Column(name = "Schedule_date")
-    private Date field8;
+    private LocalDate scheduleDate;
 
     @Column(name = "Unfixed_time")
-    private Time unfixedTime;
+    private LocalTime unfixedTime;
 
     @Column(name = "Unfixed_deadline")
-    private Date unfixedDeadline;
+    private LocalDate unfixedDeadline;
 
     @Column(name = "Unfixed_importance")
     private Integer unfixedImportance;
