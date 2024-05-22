@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams, useLocation } from 'react-router-dom';
 import axios from 'axios';
 import flatpickr from 'flatpickr';
 import 'flatpickr/dist/flatpickr.min.css';
@@ -7,14 +7,16 @@ import './css/addFlexCal.css';
 import { FaStar } from 'react-icons/fa';
 
 const AddFlexSchedulePage = () => {
-    const { id } = useParams(); // Get the ID from the URL
+    const { id } = useParams();
+    const location = useLocation();
+    const [selectedPlace, setSelectedPlace] = useState('');
     const [scheduleData, setScheduleData] = useState({
         flexTitle: '',
         flexDuration: '',
         flexDeadline: '',
         flexMemo: '',
         categoryCode: '',
-        placeCode: '',
+        placeName: selectedPlace,
         importance: 3,
         repeatDays: []
     });
@@ -31,7 +33,15 @@ const AddFlexSchedulePage = () => {
                 setScheduleData(eventToEdit);
             }
         }
-    }, [id]);
+
+        if (location.state && location.state.place) {
+            setSelectedPlace(location.state.place);
+            setScheduleData(prevData => ({
+                ...prevData,
+                placeName: location.state.place
+            }));
+        }
+    }, [id, location.state]);
 
     const handleInputChange = (event) => {
         const { name, value } = event.target;
@@ -71,7 +81,6 @@ const AddFlexSchedulePage = () => {
                 ...scheduleData,
                 flexDeadline: scheduleData.flexDeadline + ":00",
                 categoryCode: scheduleData.categoryCode ? parseInt(scheduleData.categoryCode, 10) : null,
-                placeCode: scheduleData.placeCode ? parseInt(scheduleData.placeCode, 10) : null,
             };
 
             const storedEvents = JSON.parse(localStorage.getItem('events')) || [];
@@ -91,11 +100,6 @@ const AddFlexSchedulePage = () => {
     };
 
     useEffect(() => {
-        const colors = {};
-        setCategoryColor(colors);
-    }, []);
-
-    useEffect(() => {
         const datetimeConfig = {
             enableTime: true,
             dateFormat: "Y-m-d H:i",
@@ -111,6 +115,10 @@ const AddFlexSchedulePage = () => {
 
     const setPriority = (level) => {
         setScheduleData((prevData) => ({ ...prevData, importance: level }));
+    };
+
+    const handleSearchClick = () => {
+        navigate('/Map');
     };
 
     return (
@@ -153,25 +161,9 @@ const AddFlexSchedulePage = () => {
                         </div>
                     </div>
                     <div className="addFlex-input-container">
-                        <label>중요도</label>
-                        <div className="priority-selector">
-                            {[1, 2, 3, 4, 5].map(level => (
-                                <FaStar key={level}
-                                        className={`star-icon ${scheduleData.importance >= level ? 'selected' : ''}`}
-                                        onClick={() => setPriority(level)}
-                                        style={{
-                                            color: scheduleData.importance >= level ? '#80A160' : '#ccc',
-                                            cursor: 'pointer',
-                                            marginRight: '5px' // Adjusting the margin between stars
-                                        }}
-                                />
-                            ))}
-                        </div>
-                    </div>
-                    <div className="addFlex-input-container">
-                        <label htmlFor="placeCode">장소 (선택)</label>
-                        <input type="number" className="placeCode" name="placeCode" id="placeCode" placeholder="장소"
-                               value={scheduleData.placeCode} onChange={handleInputChange}/>
+                        <label htmlFor="placeName">장소</label>
+                        <input type="text" name="placeName" value={scheduleData.placeName} onChange={handleInputChange} />
+                        <button type="button" onClick={handleSearchClick}>검색</button>
                     </div>
                     <div className="addFlex-input-container">
                         <label htmlFor="categoryCode">카테고리</label>

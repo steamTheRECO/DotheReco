@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from "react-router-dom";
+import {useLocation, useNavigate} from "react-router-dom";
 import flatpickr from 'flatpickr';
 import 'flatpickr/dist/flatpickr.min.css';
 import './css/addNormalCal.css'; // CSS 파일 import
 
 const AddNormalSchedulePage = () => {
+    const location = useLocation();
+    const [selectedPlace, setSelectedPlace] = useState('');
     const [scheduleData, setScheduleData] = useState({
         fixedTitle: '',
         fixedStartDay: '',
@@ -13,11 +15,24 @@ const AddNormalSchedulePage = () => {
         fixedEndTime: '',
         fixedMemo: '',
         categoryCode: '',
-        placeCode: '',
+        placeName: selectedPlace,
     });
     const [message, setMessage] = useState('');
     const [isTimeToggleOn, setIsTimeToggleOn] = useState(false);
     const navigate = useNavigate();
+
+
+    useEffect(() => {
+
+        if (location.state && location.state.place) {
+            setSelectedPlace(location.state.place);
+            setScheduleData(prevData => ({
+                ...prevData,
+                placeName: location.state.place
+            }));
+        }
+    }, [location.state]);
+
 
     const handleInputChange = (event) => {
         const { name, value } = event.target;
@@ -109,6 +124,10 @@ const AddNormalSchedulePage = () => {
         }
     }, [isTimeToggleOn]);
 
+    const handleSearchClick = () => {
+        navigate('/Map');
+    };
+
     return (
         <div className="addNor-gray-box">
             <button type="button" className="addNor-back-button" onClick={() => window.history.back()}>
@@ -142,7 +161,8 @@ const AddNormalSchedulePage = () => {
                             <input className="startdate-picker" name="fixedStartDay" id="fixedStartDay" type="text"
                                    placeholder="시작 날짜" value={scheduleData.fixedStartDay} onChange={handleInputChange}/>
                             <input className="starttime-picker" name="fixedStartTime" id="fixedStartTime" type="text"
-                                   placeholder="시작 시간" value={scheduleData.fixedStartTime} onChange={handleInputChange}/>
+                                   placeholder="시작 시간" value={scheduleData.fixedStartTime}
+                                   onChange={handleInputChange}/>
                             <span className="date-range-divider">~</span>
                             <input className="enddate-picker" name="fixedEndDay" id="fixedEndDay" type="text"
                                    placeholder="종료 날짜" value={scheduleData.fixedEndDay} onChange={handleInputChange}/>
@@ -150,10 +170,11 @@ const AddNormalSchedulePage = () => {
                                    placeholder="종료 시간" value={scheduleData.fixedEndTime} onChange={handleInputChange}/>
                         </div>
                     </div>
-                    <div className="addNor-input-container">
-                        <label>장소</label>
-                        <input type="number" className="placeCode" name="placeCode" id="placeCode" placeholder="장소"
-                               value={scheduleData.placeCode} onChange={handleInputChange}/>
+                    <div className="addFlex-input-container">
+                        <label htmlFor="placeName">장소</label>
+                        <input type="text" name="placeName" value={scheduleData.placeName}
+                               onChange={handleInputChange}/>
+                        <button type="button" onClick={handleSearchClick}>검색</button>
                     </div>
                     <div className="addNor-input-container">
                         <label>카테고리</label>

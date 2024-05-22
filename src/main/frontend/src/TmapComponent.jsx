@@ -1,14 +1,17 @@
 import React, { useEffect, useState, useRef } from 'react';
-
 import markerImage from "./images/marker.png";
+import { useNavigate } from 'react-router-dom';
 
 const TmapComponent = () => {
     const [mapInitialized, setMapInitialized] = useState(false);
+    const [map, setMap] = useState(null);
     const [markers, setMarkers] = useState([]);
     const [searchKeyword, setSearchKeyword] = useState('');
     const [searchResult, setSearchResult] = useState([]);
+    const [selectedPlace, setSelectedPlace] = useState(null);
+    const [userLocation, setUserLocation] = useState({ lat: 37.561451, lon: 126.946778 }); // 기본값은 이화여자대학교
     const mapRef = useRef(null);
-    const labelArr = useRef([]);
+    const navigate = useNavigate();
 
     useEffect(() => {
         const scriptId = 'tmap-script';
@@ -28,65 +31,40 @@ const TmapComponent = () => {
         } else {
             setMapInitialized(true);
         }
+
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(
+                position => {
+                    const { latitude, longitude } = position.coords;
+                    setUserLocation({ lat: latitude, lon: longitude });
+                },
+                error => {
+                    console.error("Error getting user's location:", error);
+                }
+            );
+        }
     }, []);
 
     useEffect(() => {
-        if (mapInitialized && window.Tmapv3) {
-            mapRef.current = new window.Tmapv3.Map("map_div", {
-                center: new window.Tmapv3.LatLng(37.561451, 126.946778),
+        if (mapInitialized && window.Tmapv3 && !map) {
+            const mapInstance = new window.Tmapv3.Map("map_div", {
+                center: new window.Tmapv3.LatLng(userLocation.lat, userLocation.lon),
                 width: "100%",
                 height: "800px",
                 zoom: 16
             });
+            setMap(mapInstance);
         }
-    }, [mapInitialized]);
-
-    const poiDetail = (poiId) => {
-        const headers = {
-            "appKey": "0ZSTJ6jGf15NagHDb0wOT5Q06tnZG7Yw2vKYVzqo"
-        };
-
-        fetch(`https://apis.openapi.sk.com/tmap/pois/${poiId}?version=1&resCoordType=EPSG3857&format=json`, {
-            method: 'GET',
-            headers: headers
-        })
-            .then(response => response.json())
-            .then(data => {
-                const detailInfo = data.poiDetailInfo;
-                const name = detailInfo.name;
-                const address = detailInfo.address;
-
-                const noorLat = parseFloat(detailInfo.frontLat);
-                const noorLon = parseFloat(detailInfo.frontLon);
-
-                const pointCng = new window.Tmapv3.Point(noorLon, noorLat);
-                const projectionCng = new window.Tmapv3.Projection.convertEPSG3857ToWGS84GEO(pointCng);
-
-                const lat = projectionCng._lat;
-                const lon = projectionCng._lng;
-
-                const labelPosition = new window.Tmapv3.LatLng(lat, lon);
-
-                const content = `<div style="border-radius: 10px; background-color: #2f4f4f; position: relative; line-height: 15px; padding: 5px 5px 2px 4px; right: 65px;">
-                            <div style="font-size: 11px; font-weight: bold; line-height: 15px; color: white;">
-                                Name: ${name} <br>
-                                Address: ${address}
-                            </div>
-                        </div>`;
-
-                const labelInfo = new window.Tmapv3.Label({
-                    position: labelPosition,
-                    content: content,
-                    map: mapRef.current
-                });
-
-                labelArr.current.push(labelInfo);
-            })
-            .catch(error => console.error('Error:', error));
-    };
+    }, [mapInitialized, userLocation]);
 
     const handleSearch = () => {
-        fetch(`https://apis.openapi.sk.com/tmap/pois?version=1&format=json&searchKeyword=${encodeURIComponent(searchKeyword)}&resCoordType=WGS84GEO&reqCoordType=WGS84GEO&count=10`, {
+        if (!map) return;
+
+        const center = map.getCenter();
+        const centerLat = center._lat;
+        const centerLon = center._lng;
+
+        fetch(`https://apis.openapi.sk.com/tmap/pois?version=1&format=json&searchKeyword=${encodeURIComponent(searchKeyword)}&centerLat=${centerLat}&centerLon=${centerLon}&radius=1&resCoordType=WGS84GEO&reqCoordType=WGS84GEO&count=10`, {
             method: 'GET',
             headers: {
                 "appKey": "0ZSTJ6jGf15NagHDb0wOT5Q06tnZG7Yw2vKYVzqo"
@@ -113,7 +91,7 @@ const TmapComponent = () => {
                         icon: markerImage,
                         iconSize: new window.Tmapv3.Size(24, 38),
                         title: name,
-                        map: mapRef.current
+                        map: map
                     });
 
                     bounds.extend(markerPosition);
@@ -122,9 +100,34 @@ const TmapComponent = () => {
 
                 setMarkers(newMarkers);
                 setSearchResult(resultpoisData);
-                mapRef.current.fitBounds(bounds);
+                map.fitBounds(bounds);
             })
             .catch(error => console.error('Error:', error));
+    };
+
+    const handleMarkerClick = (poi) => {
+        const lat = parseFloat(poi.frontLat);
+        const lon = parseFloat(poi.frontLon);
+        const name = poi.name;
+
+        const markerPosition = new window.Tmapv3.LatLng(lat, lon);
+
+        const marker = new window.Tmapv3.Marker({
+            position: markerPosition,
+            icon: markerImage,
+            iconSize: new window.Tmapv3.Size(24, 38),
+            title: name,
+            map: map
+        });
+
+        markers.forEach(marker => marker.setMap(null));
+        setMarkers([marker]);
+        setSelectedPlace(name);
+    };
+
+    const handleConfirm = () => {
+        const place = selectedPlace || searchKeyword;
+        navigate('/AddFlexSchedule', { state: { place } });
     };
 
     return (
@@ -136,7 +139,7 @@ const TmapComponent = () => {
                     value={searchKeyword}
                     onChange={e => setSearchKeyword(e.target.value)}
                 />
-                <button onClick={handleSearch}>적용하기</button>
+                <button onClick={handleSearch}>검색</button>
             </div>
             <div style={{ display: 'flex' }}>
                 <div style={{ width: '30%' }}>
@@ -145,7 +148,7 @@ const TmapComponent = () => {
                         <div className="rst mCustomScrollbar">
                             <ul id="searchResult" name="searchResult">
                                 {searchResult.map((poi, index) => (
-                                    <li key={index} onClick={() => poiDetail(poi.id)}>
+                                    <li key={index} onClick={() => handleMarkerClick(poi)}>
                                         <span>{poi.name}</span>
                                     </li>
                                 ))}
@@ -153,8 +156,9 @@ const TmapComponent = () => {
                         </div>
                     </div>
                 </div>
-                <div id="map_div" className="map_wrap" style={{ width: '70%' }}></div>
+                <div id="map_div" className="map_wrap" style={{ width: '70%' }} ref={mapRef}></div>
             </div>
+            <button onClick={handleConfirm}>입력</button>
         </div>
     );
 };
