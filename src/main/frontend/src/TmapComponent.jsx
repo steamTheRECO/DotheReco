@@ -64,7 +64,7 @@ const TmapComponent = () => {
         const centerLat = center._lat;
         const centerLon = center._lng;
 
-        fetch(`https://apis.openapi.sk.com/tmap/pois?version=1&format=json&searchKeyword=${encodeURIComponent(searchKeyword)}&centerLat=${centerLat}&centerLon=${centerLon}&radius=1&resCoordType=WGS84GEO&reqCoordType=WGS84GEO&count=10`, {
+        fetch(`https://apis.openapi.sk.com/tmap/pois?version=1&format=json&searchKeyword=${encodeURIComponent(searchKeyword)}&centerLat=${centerLat}&centerLon=${centerLon}&radius=5&resCoordType=WGS84GEO&reqCoordType=WGS84GEO&count=20`, {
             method: 'GET',
             headers: {
                 "appKey": "0ZSTJ6jGf15NagHDb0wOT5Q06tnZG7Yw2vKYVzqo"
@@ -72,7 +72,8 @@ const TmapComponent = () => {
         })
             .then(response => response.json())
             .then(data => {
-                const resultpoisData = data.searchPoiInfo.pois.poi;
+                if (data.searchPoiInfo && data.searchPoiInfo.pois && data.searchPoiInfo.pois.poi) {
+                    const resultpoisData = data.searchPoiInfo.pois.poi;
 
                 markers.forEach(marker => marker.setMap(null));
                 setMarkers([]);
@@ -101,6 +102,9 @@ const TmapComponent = () => {
                 setMarkers(newMarkers);
                 setSearchResult(resultpoisData);
                 map.fitBounds(bounds);
+                } else {
+                    alert("검색 결과가 없습니다.");
+                }
             })
             .catch(error => console.error('Error:', error));
     };
@@ -128,6 +132,7 @@ const TmapComponent = () => {
     const handleConfirm = () => {
         const place = selectedPlace || searchKeyword;
         navigate('/AddFlexSchedule', { state: { place } });
+        navigate('/addNormalschedule', { state: { place } });
     };
 
     return (
