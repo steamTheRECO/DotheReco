@@ -14,7 +14,7 @@ import RecommendationPage from "./RecommendationPage";
 import RecoIng from "./RecoIng";
 import SettingPage from "./SettingPage";
 import TmapComponent from "./TmapComponent";
-
+import WalkingMapPage from "./WalkingMapPage";
 
 function App() {
     return (
@@ -33,6 +33,7 @@ function App() {
                 <Route path="/Recommendation" element={<RecommendationPage/>} />
                 <Route path="/RecoIng" element={<RecoIng/>} />
                 <Route path="/Setting" element={<SettingPage/>} />
+                <Route path="/walkingMap" element={<WalkingMapPage/>} />
             </Routes>
         </Router>
     );
