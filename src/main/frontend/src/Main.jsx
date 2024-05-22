@@ -8,6 +8,7 @@ import TimeTableImage from './images/Time table.png';
 import CalendarImage from './images/Calendar.png';
 import TodoListImage from './images/할 일 list.png';
 import axios from 'axios';
+
 const Main = () => {
     const [date, setDate] = useState(new Date());
     const [mini_date, mini_setDate] = useState(new Date());
@@ -20,6 +21,7 @@ const Main = () => {
 
     const [showEstimatedPicker, setShowEstimatedPicker] = useState(false);
     const [selectedEstimated, setSelectedEstimated] = useState('');
+    const [recommendedTimes, setRecommendedTimes] = useState([]); // 추천된 시간대를 저장하는 상태
 
     const getCategoryColor = (categoryCode) => {
         // 카테고리 코드에 따라 다른 색상을 반환
@@ -250,10 +252,52 @@ const Main = () => {
         document.querySelector('.back-bg').style.display = 'none';
     };
 
-    const onRecommendClick = () => {
+    const onRecommendClick = async () => {
         document.querySelector('.search-popup-wrap').style.display = 'none';
         document.querySelector('.searchList-popup-wrap').style.display = 'block';
         document.querySelector('.back-bg').style.display = 'block';
+
+        // 임의의 추천 시간 데이터 생성
+        const mockRecommendedTimes = [
+            {
+                date: '2024년 5월 22일',
+                starttime: '15:00' ,
+                endtime: '18:00'
+            },
+            {
+                date: '2024년 5월 23일',
+                starttime: '09:00',
+                endtime: '18:00'
+            },
+            {
+                date: '2024년 5월 24일',
+                starttime: '14:00',
+                endtime: '18:00'
+            },
+            {
+                date: '2024년 5월 24일',
+                starttime: '14:00',
+                endtime: '18:00'
+            }
+        ];
+        setRecommendedTimes(mockRecommendedTimes);
+
+        /*
+        try {
+            //임의의 데이터 생성
+            const selectedDates = selectedMiniDates.map(day => new Date(mini_date.getFullYear(), mini_date.getMonth(), day).toISOString());
+
+            // 백엔드 호출
+            const response = await axios.post('/api/recommend-times', {
+                dates: selectedDates,
+                estimatedTime: selectedEstimated,
+            });
+
+            setRecommendedTimes(response.data.recommendedTimes);
+        } catch (error) {
+            console.error('Error fetching recommended times:', error);
+        }
+        */
     };
 
     const goToaddNormalSchedule = () => {
@@ -384,10 +428,25 @@ const Main = () => {
 
             {/*시간대 추천 리스트 팝업 창*/}
             <div className="searchList-popup-wrap">
-                <h2 className="search-h2">시간대 추천</h2>
                 <button className="search-back-button" id="back-button" onClick={goBack}>
                     &lt;
                 </button>
+                <h2 className="search-h2">시간대 추천</h2>
+                <div className="recommended-times-list-wrap">
+                    <div className="recommended-times-list-container">
+                        <div className="recommended-times-list">
+                            {recommendedTimes.map((time, index) => (
+                                <div key={index} className="recommended-time">
+                                    <div className="time-box">
+                                        날짜: {time.date}<br/>
+                                        시간: {time.starttime} - {time.endtime}
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                </div>
+
             </div>
 
             {/*addSchedule 눌렀을 때 뜨는 팝업 창*/}

@@ -11,6 +11,7 @@ import TimeLinePage from "./TimeLinePage";
 import TimePicker from "./TimePicker";
 import ToDoListPage from "./ToDoListPage";
 import RecommendationPage from "./RecommendationPage";
+import RecoIng from "./RecoIng";
 import SettingPage from "./SettingPage";
 import TmapComponent from "./TmapComponent";
 
@@ -30,6 +31,7 @@ function App() {
                 <Route path="/TimePicker" element={<TimePicker/>} />
                 <Route path="/ToDoList" element={<ToDoListPage />} />
                 <Route path="/Recommendation" element={<RecommendationPage/>} />
+                <Route path="/RecoIng" element={<RecoIng/>} />
                 <Route path="/Setting" element={<SettingPage/>} />
             </Routes>
         </Router>
