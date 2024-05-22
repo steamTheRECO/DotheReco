@@ -26,16 +26,15 @@ const WalkingMapPage = () => {
     const [mapInitialized, setMapInitialized] = useState(false);
     const [map, setMap] = useState(null);
     const [markers, setMarkers] = useState([]);
-    const [searchKeyword, setSearchKeyword] = useState('');
-    const [searchResult, setSearchResult] = useState([]);
-    const [selectedPlace, setSelectedPlace] = useState(null);
-    const [userLocation, setUserLocation] = useState({ lat: 37.561451, lon: 126.946778 }); // 기본값은 이화여자대학교
-    const [coordinate1, setCoordinate1] = useState({ lat: 37.5665, lon: 126.9780 }); // 예시 좌표 1
-    const [coordinate2, setCoordinate2] = useState({ lat: 37.5651, lon: 126.9895 }); // 예시 좌표 2
+    const [userLocation, setUserLocation] = useState({lat: 37.561451, lon: 126.946778}); // 기본값은 이화여자대학교
+    const [coordinate1, setCoordinate1] = useState({lat: 37.556273117267686, lon: 126.93460205658282}); // 볼링장 좌표 1
+    const [coordinate2, setCoordinate2] = useState({lat: 37.558842397721314, lon: 126.94639583795444}); // 불밥 좌표 2
     const mapRef = useRef(null);
     const navigate = useNavigate();
     const location = useLocation();
     const [timeTable, setTimeTable] = useState([]);
+    const [routeInfo, setRouteInfo] = useState({ distance: '', time: '' });
+    const [resultdrawArr, setResultdrawArr] = useState([]);
 
     useEffect(() => {
         const scriptId = 'tmap-script';
@@ -59,8 +58,8 @@ const WalkingMapPage = () => {
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(
                 position => {
-                    const { latitude, longitude } = position.coords;
-                    setUserLocation({ lat: latitude, lon: longitude });
+                    const {latitude, longitude} = position.coords;
+                    setUserLocation({lat: latitude, lon: longitude});
                 },
                 error => {
                     console.error("Error getting user's location:", error);
@@ -95,86 +94,69 @@ const WalkingMapPage = () => {
             });
 
             setMarkers([marker1, marker2]);
+            calculateRoute(mapInstance, marker1, marker2);
         }
     }, [mapInitialized, userLocation]);
 
-    const handleSearch = () => {
-        if (!map) return;
+    const calculateRoute = (mapInstance, marker1, marker2) => {
+        const headers = {
+            "appKey": "0ZSTJ6jGf15NagHDb0wOT5Q06tnZG7Yw2vKYVzqo",
+            "Content-Type": "application/json"
+        };
 
-        const center = map.getCenter();
-        const centerLat = center._lat;
-        const centerLon = center._lng;
+        const data = {
+            "startX": marker1.getPosition().lng(),
+            "startY": marker1.getPosition().lat(),
+            "endX": marker2.getPosition().lng(),
+            "endY": marker2.getPosition().lat(),
+            "reqCoordType": "WGS84GEO",
+            "resCoordType": "EPSG3857",
+            "startName": "출발지",
+            "endName": "도착지"
+        };
 
-        fetch(`https://apis.openapi.sk.com/tmap/pois?version=1&format=json&searchKeyword=${encodeURIComponent(searchKeyword)}&centerLat=${centerLat}&centerLon=${centerLon}&radius=5&resCoordType=WGS84GEO&reqCoordType=WGS84GEO&count=20`, {
-            method: 'GET',
-            headers: {
-                "appKey": "0ZSTJ6jGf15NagHDb0wOT5Q06tnZG7Yw2vKYVzqo"
-            }
+        fetch("https://apis.openapi.sk.com/tmap/routes/pedestrian?version=1&format=json", {
+            method: "POST",
+            headers: headers,
+            body: JSON.stringify(data)
         })
             .then(response => response.json())
-            .then(data => {
-                if (data.searchPoiInfo && data.searchPoiInfo.pois && data.searchPoiInfo.pois.poi) {
-                    const resultpoisData = data.searchPoiInfo.pois.poi;
+            .then(response => {
+                const resultData = response.features;
 
-                    markers.forEach(marker => marker.setMap(null));
-                    setMarkers([]);
-
-                    let bounds = new window.Tmapv3.LatLngBounds();
-
-                    const newMarkers = resultpoisData.map((poi, index) => {
-                        const lat = parseFloat(poi.frontLat);
-                        const lon = parseFloat(poi.frontLon);
-                        const name = poi.name;
-
-                        const markerPosition = new window.Tmapv3.LatLng(lat, lon);
-
-                        const marker = new window.Tmapv3.Marker({
-                            position: markerPosition,
-                            icon: markerImage,
-                            iconSize: new window.Tmapv3.Size(24, 38),
-                            title: name,
-                            map: map
-                        });
-
-                        bounds.extend(markerPosition);
-                        return marker;
-                    });
-
-                    setMarkers(newMarkers);
-                    setSearchResult(resultpoisData);
-                    map.fitBounds(bounds);
-                } else {
-                    alert("검색 결과가 없습니다.");
+                if (resultdrawArr.length > 0) {
+                    resultdrawArr.forEach(line => line.setMap(null));
+                    setResultdrawArr([]);
                 }
+
+                let drawInfoArr = [];
+                resultData.forEach(item => {
+                    const { geometry } = item;
+                    if (geometry.type === "LineString") {
+                        geometry.coordinates.forEach(coord => {
+                            const latlng = new window.Tmapv3.Point(coord[0], coord[1]);
+                            const convertPoint = new window.Tmapv3.Projection.convertEPSG3857ToWGS84GEO(latlng);
+                            drawInfoArr.push(new window.Tmapv3.LatLng(convertPoint._lat, convertPoint._lng));
+                        });
+                    }
+                });
+
+                drawLine(drawInfoArr, mapInstance);
+                const distance = (resultData[0].properties.totalDistance / 1000).toFixed(1);
+                const time = (resultData[0].properties.totalTime / 60).toFixed(0);
+                setRouteInfo({ distance, time });
             })
             .catch(error => console.error('Error:', error));
     };
 
-    const handleMarkerClick = (poi) => {
-        const lat = parseFloat(poi.frontLat);
-        const lon = parseFloat(poi.frontLon);
-        const name = poi.name;
-
-        const markerPosition = new window.Tmapv3.LatLng(lat, lon);
-
-        const marker = new window.Tmapv3.Marker({
-            position: markerPosition,
-            icon: markerImage,
-            iconSize: new window.Tmapv3.Size(24, 38),
-            title: name,
-            map: map
+    const drawLine = (arrPoint, mapInstance) => {
+        const polyline = new window.Tmapv3.Polyline({
+            path: arrPoint,
+            strokeColor: "#e11f1f",
+            strokeWeight: 6,
+            map: mapInstance
         });
-
-        markers.forEach(marker => marker.setMap(null));
-        setMarkers([marker]);
-        setSelectedPlace(name);
-    };
-
-    const handleConfirm = () => {
-        const place = selectedPlace || searchKeyword;
-        const previousPath = location.state?.from || '/';
-
-        navigate(previousPath, { state: { place } });
+        setResultdrawArr(prevState => [...prevState, polyline]);
     };
 
     const formatTime = (time) => {
@@ -216,7 +198,7 @@ const WalkingMapPage = () => {
         navigate('/ToDolist');
     };
 
-    const goToSetting=()=>{
+    const goToSetting = () => {
         navigate('/Setting');
     }
 
@@ -227,17 +209,11 @@ const WalkingMapPage = () => {
             </button>
             <div className="Tmapplace-content">
                 <div id="map_div" className="Tmap_wrap" ref={mapRef}></div>
-                <div className="rst_wrap">
-                    <div className="rst mCustomScrollbar">
-                        <ul id="searchResult" className="searchResult">
-                            {searchResult.map((poi, index) => (
-                                <li key={index} onClick={() => handleMarkerClick(poi)}>
-                                    <span>{poi.name}</span>
-                                </li>
-                            ))}
-                        </ul>
-                    </div>
-                </div>
+            </div>
+
+            {/* 경로 정보 */}
+            <div className="route-info">
+                <p>총 거리: {routeInfo.distance} km 예상이동시간: {routeInfo.time} 분 </p>
             </div>
 
             {/* 타임 테이블 */}
@@ -267,8 +243,7 @@ const WalkingMapPage = () => {
                                                     {formatTime(item.startTime)} - {formatTime(item.endTime)}
                                                 </div>
                                                 <div className="event-category-container">
-                                                    <div
-                                                        className="event-category">{getCategoryName(item.category)}</div>
+                                                    <div className="event-category">{getCategoryName(item.category)}</div>
                                                 </div>
                                             </div>
                                         );
