@@ -20,6 +20,7 @@ const Main = () => {
 
     const [showEstimatedPicker, setShowEstimatedPicker] = useState(false);
     const [selectedEstimated, setSelectedEstimated] = useState('');
+    const [recommendedSlots, setRecommendedSlots] = useState([]); /////
 
     const getCategoryColor = (categoryCode) => {
         // 카테고리 코드에 따라 다른 색상을 반환
@@ -249,11 +250,36 @@ const Main = () => {
         document.querySelector('.searchList-popup-wrap').style.display = 'none';
         document.querySelector('.back-bg').style.display = 'none';
     };
-
+/*
     const onRecommendClick = () => {
         document.querySelector('.search-popup-wrap').style.display = 'none';
         document.querySelector('.searchList-popup-wrap').style.display = 'block';
         document.querySelector('.back-bg').style.display = 'block';
+    };*/
+    const onRecommendClick = async () => {
+        try {
+            const dateFormatted = mini_date.toISOString().split('T')[0];
+            const durationParts = selectedEstimated.split(':');
+            const hours = parseInt(durationParts[0]);
+            const minutes = parseInt(durationParts[1]);
+            const expectedDuration = `PT${hours}H${minutes}M`;
+
+            const response = await axios.get('http://localhost:8080/api/time/recommend', {
+                params: {
+                    date: dateFormatted,
+                    expectedDuration: expectedDuration,
+                },
+            });
+
+            console.log('추천된 시간대:', response.data);
+            setRecommendedSlots(response.data);
+
+            document.querySelector('.search-popup-wrap').style.display = 'none';
+            document.querySelector('.searchList-popup-wrap').style.display = 'block';
+            document.querySelector('.back-bg').style.display = 'block';
+        } catch (error) {
+            console.error('시간대 추천 오류:', error);
+        }
     };
 
     const goToaddNormalSchedule = () => {
