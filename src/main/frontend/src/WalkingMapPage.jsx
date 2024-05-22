@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
 import markerImage from "./images/marker.png";
+import markerforStopoverImage from "./images/stopoverMarker.png";
 import { useNavigate, useLocation } from 'react-router-dom';
 import './css/WalkingMap.css';
 import TimeTableImage from "./images/Time table.png";
@@ -29,6 +30,7 @@ const WalkingMapPage = () => {
     const [userLocation, setUserLocation] = useState({lat: 37.561451, lon: 126.946778}); // 기본값은 이화여자대학교
     const [coordinate1, setCoordinate1] = useState({lat: 37.556273117267686, lon: 126.93460205658282}); // 볼링장 좌표 1
     const [coordinate2, setCoordinate2] = useState({lat: 37.558842397721314, lon: 126.94639583795444}); // 불밥 좌표 2
+    const [coordinate3, setCoordinate3] = useState({lat: 37.56680149281015, lon: 126.9487473277085}); // 신공학관 좌표
     const mapRef = useRef(null);
     const navigate = useNavigate();
     const location = useLocation();
@@ -78,7 +80,7 @@ const WalkingMapPage = () => {
             });
             setMap(mapInstance);
 
-            // Create markers for the two coordinates
+            // Create markers for the three coordinates
             const marker1 = new window.Tmapv3.Marker({
                 position: new window.Tmapv3.LatLng(coordinate1.lat, coordinate1.lon),
                 icon: markerImage,
@@ -88,23 +90,30 @@ const WalkingMapPage = () => {
 
             const marker2 = new window.Tmapv3.Marker({
                 position: new window.Tmapv3.LatLng(coordinate2.lat, coordinate2.lon),
+                icon: markerforStopoverImage,
+                iconSize: new window.Tmapv3.Size(24, 38),
+                map: mapInstance
+            });
+
+            const marker3 = new window.Tmapv3.Marker({
+                position: new window.Tmapv3.LatLng(coordinate3.lat, coordinate3.lon),
                 icon: markerImage,
                 iconSize: new window.Tmapv3.Size(24, 38),
                 map: mapInstance
             });
 
-            setMarkers([marker1, marker2]);
-            calculateRoute(mapInstance, marker1, marker2);
+            setMarkers([marker1, marker2, marker3]);
+            calculateRoute(mapInstance, marker1, marker2, marker3);
         }
     }, [mapInitialized, userLocation]);
 
-    const calculateRoute = (mapInstance, marker1, marker2) => {
+    const calculateRoute = (mapInstance, marker1, marker2, marker3) => {
         const headers = {
             "appKey": "0ZSTJ6jGf15NagHDb0wOT5Q06tnZG7Yw2vKYVzqo",
             "Content-Type": "application/json"
         };
 
-        const data = {
+        const data1 = {
             "startX": marker1.getPosition().lng(),
             "startY": marker1.getPosition().lat(),
             "endX": marker2.getPosition().lng(),
@@ -112,39 +121,85 @@ const WalkingMapPage = () => {
             "reqCoordType": "WGS84GEO",
             "resCoordType": "EPSG3857",
             "startName": "출발지",
+            "endName": "경유지"
+        };
+
+        const data2 = {
+            "startX": marker2.getPosition().lng(),
+            "startY": marker2.getPosition().lat(),
+            "endX": marker3.getPosition().lng(),
+            "endY": marker3.getPosition().lat(),
+            "reqCoordType": "WGS84GEO",
+            "resCoordType": "EPSG3857",
+            "startName": "경유지",
             "endName": "도착지"
         };
 
         fetch("https://apis.openapi.sk.com/tmap/routes/pedestrian?version=1&format=json", {
             method: "POST",
             headers: headers,
-            body: JSON.stringify(data)
+            body: JSON.stringify(data1)
         })
             .then(response => response.json())
-            .then(response => {
-                const resultData = response.features;
+            .then(response1 => {
+                if (response1.features) {
+                    fetch("https://apis.openapi.sk.com/tmap/routes/pedestrian?version=1&format=json", {
+                        method: "POST",
+                        headers: headers,
+                        body: JSON.stringify(data2)
+                    })
+                        .then(response => response.json())
+                        .then(response2 => {
+                            if (response2.features) {
+                                const resultData1 = response1.features;
+                                const resultData2 = response2.features;
 
-                if (resultdrawArr.length > 0) {
-                    resultdrawArr.forEach(line => line.setMap(null));
-                    setResultdrawArr([]);
+                                if (resultdrawArr.length > 0) {
+                                    resultdrawArr.forEach(line => line.setMap(null));
+                                    setResultdrawArr([]);
+                                }
+
+                                let drawInfoArr1 = [];
+                                resultData1.forEach(item => {
+                                    const { geometry } = item;
+                                    if (geometry.type === "LineString") {
+                                        geometry.coordinates.forEach(coord => {
+                                            const latlng = new window.Tmapv3.Point(coord[0], coord[1]);
+                                            const convertPoint = new window.Tmapv3.Projection.convertEPSG3857ToWGS84GEO(latlng);
+                                            drawInfoArr1.push(new window.Tmapv3.LatLng(convertPoint._lat, convertPoint._lng));
+                                        });
+                                    }
+                                });
+
+                                let drawInfoArr2 = [];
+                                resultData2.forEach(item => {
+                                    const { geometry } = item;
+                                    if (geometry.type === "LineString") {
+                                        geometry.coordinates.forEach(coord => {
+                                            const latlng = new window.Tmapv3.Point(coord[0], coord[1]);
+                                            const convertPoint = new window.Tmapv3.Projection.convertEPSG3857ToWGS84GEO(latlng);
+                                            drawInfoArr2.push(new window.Tmapv3.LatLng(convertPoint._lat, convertPoint._lng));
+                                        });
+                                    }
+                                });
+
+                                drawLine(drawInfoArr1, mapInstance);
+                                drawLine(drawInfoArr2, mapInstance);
+
+                                const distance1 = resultData1[0].properties.totalDistance;
+                                const time1 = resultData1[0].properties.totalTime;
+
+                                const distance2 = resultData2[0].properties.totalDistance;
+                                const time2 = resultData2[0].properties.totalTime;
+
+                                const totalDistance = ((distance1 + distance2) / 1000).toFixed(1);
+                                const totalTime = ((time1 + time2) / 60).toFixed(0);
+
+                                setRouteInfo({ distance: totalDistance, time: totalTime });
+                            }
+                        })
+                        .catch(error => console.error('Error:', error));
                 }
-
-                let drawInfoArr = [];
-                resultData.forEach(item => {
-                    const { geometry } = item;
-                    if (geometry.type === "LineString") {
-                        geometry.coordinates.forEach(coord => {
-                            const latlng = new window.Tmapv3.Point(coord[0], coord[1]);
-                            const convertPoint = new window.Tmapv3.Projection.convertEPSG3857ToWGS84GEO(latlng);
-                            drawInfoArr.push(new window.Tmapv3.LatLng(convertPoint._lat, convertPoint._lng));
-                        });
-                    }
-                });
-
-                drawLine(drawInfoArr, mapInstance);
-                const distance = (resultData[0].properties.totalDistance / 1000).toFixed(1);
-                const time = (resultData[0].properties.totalTime / 60).toFixed(0);
-                setRouteInfo({ distance, time });
             })
             .catch(error => console.error('Error:', error));
     };
