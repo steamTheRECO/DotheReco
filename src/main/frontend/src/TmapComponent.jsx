@@ -10,7 +10,9 @@ const TmapComponent = () => {
     const location = useLocation();
 
     const handleSearch = () => {
+
         fetch(`https://apis.openapi.sk.com/tmap/pois?version=1&format=json&searchKeyword=${encodeURIComponent(searchKeyword)}&resCoordType=WGS84GEO&reqCoordType=WGS84GEO&count=20`, {
+
             method: 'GET',
             headers: {
                 "appKey": "0ZSTJ6jGf15NagHDb0wOT5Q06tnZG7Yw2vKYVzqo"
@@ -19,7 +21,9 @@ const TmapComponent = () => {
             .then(response => response.json())
             .then(data => {
                 if (data.searchPoiInfo && data.searchPoiInfo.pois && data.searchPoiInfo.pois.poi) {
+
                     setSearchResult(data.searchPoiInfo.pois.poi);
+
                 } else {
                     alert("검색 결과가 없습니다.");
                 }
@@ -34,9 +38,11 @@ const TmapComponent = () => {
 
     const handleConfirm = () => {
         const place = selectedPlace || searchKeyword;
+
         const previousPath = location.state?.from || '/';
 
         navigate(previousPath, { state: { place } });
+
     };
 
     return (
