@@ -123,6 +123,10 @@ const Timeline = () => {
         navigate('/Setting');
     }
 
+    const goToWalkingMap=()=>{
+        navigate('/walkingMap')
+    }
+
     const toggleReminder = (id) => {
         setReminders(reminders.map(reminder =>
             reminder.id === id ? { ...reminder, checked: !reminder.checked } : reminder
@@ -199,7 +203,7 @@ const Timeline = () => {
 
                 {/* 우측 상단 이미지 */}
                 <div className="timeline-top-right-images">
-                    <img id="connection-map" src={mapImage} alt="map" />
+                    <img id="connection-map" src={mapImage} alt="map" onClick={goToWalkingMap}/>
                     <img id="connection-recommendation" src={recommendationImage} alt="recommendation" onClick={goToReco}/>
                 </div>
             </div>

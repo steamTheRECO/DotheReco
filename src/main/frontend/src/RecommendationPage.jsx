@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import './css/recommendation.css';
 import { useNavigate } from "react-router-dom";
 import TimeTableImage from "./images/Time table.png";
@@ -94,6 +94,10 @@ const RecommendationPage = () => {
     const goToToDoList = () => {
         navigate('/ToDolist');
     };
+
+    const goToSetting=()=>{
+        navigate('/Setting');
+    }
 
     const formatTime = (time) => {
         const [hour, minute] = time.split(':');
@@ -210,7 +214,7 @@ const RecommendationPage = () => {
                     <p>To Do list</p>
                 </div>
                 <div className="menu-details">
-                    <img className="SettingImage" src={SettingImage} alt="Setting"/>
+                    <img className="SettingImage" src={SettingImage} alt="Setting" onClick={goToSetting}/>
                     <p>Setting</p>
                 </div>
             </div>
