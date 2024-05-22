@@ -23,7 +23,7 @@ const Main = () => {
     const [selectedEstimated, setSelectedEstimated] = useState('');
 
   //  const [recommendedSlots, setRecommendedSlots] = useState([]); /////
-=======
+
     const [recommendedTimes, setRecommendedTimes] = useState([]); // 추천된 시간대를 저장하는 상태
 
 
