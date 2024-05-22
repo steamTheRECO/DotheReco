@@ -36,7 +36,20 @@ const Main = () => {
                 return '#DBE9CD'; // 기본 색상
         }
     };
+    useEffect(() => {
+        const fetchEvents = async () => {
+            try {
+                const response = await axios.get('http://localhost:8080/api/fixed');
+                setEvents(response.data);
+            } catch (error) {
+                console.error('일정을 가져오는 중 오류 발생:', error);
+            }
+        };
 
+        fetchEvents();
+    }, []);
+
+    /*
 // 외부 페이지에서 전달받은 데이터 처리
     useEffect(() => {
         // 기존 이벤트 목록을 가져옵니다.
@@ -60,9 +73,16 @@ const Main = () => {
             }
         }
     }, [location.state]);
-
-    //localStorage.clear();
-
+*/
+    useEffect(() => {
+        // 외부 페이지에서 전달받은 데이터 처리
+        if (location.state && location.state.newEvent) {
+            const newEvent = location.state.newEvent;
+            setEvents(prevEvents => [...prevEvents, newEvent]);
+            // 상태 초기화
+            navigate(location.pathname, { replace: true });
+        }
+    }, [location.state?.newEvent]);
     const renderCalendar = () => {
         // 현재 날짜와 이벤트 목록을 가져옵니다.
         const viewYear = date.getFullYear();
