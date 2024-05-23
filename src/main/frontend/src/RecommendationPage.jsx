@@ -102,7 +102,8 @@ const RecommendationPage = () => {
                     startTime: event.fixedStartTime,
                     endTime: event.fixedEndTime,
                     event: event.fixedTitle,
-                    category: event.categoryCode
+                    category: event.categoryCode,
+                    place: event.placeName // Ensure placeName is included
                 }));
                 setTimeTable(eventsForToday);
             } catch (error) {
@@ -211,6 +212,7 @@ const RecommendationPage = () => {
                                                 <div className="event-category-container">
                                                     <div
                                                         className="event-category">{getCategoryName(item.category)}</div>
+                                                    <div className="event-place">{item.place}</div> {/* 장소 표시 */}
                                                 </div>
                                             </div>
                                         );
@@ -238,6 +240,7 @@ const RecommendationPage = () => {
                                                 <div className="event-time">
                                                     {formatTime(item.startTime)} - {formatTime(item.endTime)}
                                                 </div>
+                                                <div className="event-place">{item.place}</div> {/* 장소 표시 */}
                                             </div>
                                         );
                                     }

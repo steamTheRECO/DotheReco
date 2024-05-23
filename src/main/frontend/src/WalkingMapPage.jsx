@@ -7,7 +7,7 @@ import TimeTableImage from "./images/Time table.png";
 import CalendarImage from "./images/Calendar.png";
 import TodoListImage from "./images/할 일 list.png";
 import SettingImage from "./images/Setting.png";
-
+import axios from 'axios';
 // 카테고리별 색상 정의
 const categoryColors = {
     1: '#F0CAB9', // 약속
@@ -241,6 +241,27 @@ const WalkingMapPage = () => {
         return parseInt(hour) >= 7 || parseInt(hour) === 0;
     });
 
+    useEffect(() => {
+        const fetchTodaySchedules = async () => {
+            const today = new Date().toISOString().split('T')[0];
+            try {
+                const response = await axios.get(`http://localhost:8080/api/fixed/date/${today}`);
+                const eventsForToday = response.data.map(event => ({
+                    startTime: event.fixedStartTime,
+                    endTime: event.fixedEndTime,
+                    event: event.fixedTitle,
+                    category: event.categoryCode,
+                    place: event.placeName // 장소 정보 추가
+                }));
+                setTimeTable(eventsForToday);
+            } catch (error) {
+                console.error('일정을 가져오는 중 오류 발생:', error);
+            }
+        };
+
+        fetchTodaySchedules();
+    }, []);
+
     const goToTimeLine = () => {
         navigate('/timeLine');
     };
@@ -299,6 +320,7 @@ const WalkingMapPage = () => {
                                                 </div>
                                                 <div className="event-category-container">
                                                     <div className="event-category">{getCategoryName(item.category)}</div>
+                                                    <div className="event-place">{item.place}</div> {/* 장소 표시 */}
                                                 </div>
                                             </div>
                                         );
@@ -326,6 +348,7 @@ const WalkingMapPage = () => {
                                                 <div className="event-time">
                                                     {formatTime(item.startTime)} - {formatTime(item.endTime)}
                                                 </div>
+                                                <div className="event-place">{item.place}</div> {/* 장소 표시 */}
                                             </div>
                                         );
                                     }
