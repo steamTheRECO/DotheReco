@@ -5,10 +5,7 @@ import TimeTableImage from "./images/Time table.png";
 import CalendarImage from "./images/Calendar.png";
 import TodoListImage from "./images/할 일 list.png";
 import SettingImage from "./images/Setting.png";
-
-import Loading from './loading'; // Import the Loading component
 import axios from 'axios';
-
 
 // 카테고리별 색상 정의
 const categoryColors = {
@@ -29,10 +26,12 @@ const RecommendationPage = () => {
     const navigate = useNavigate();
     const [selectedDate, setSelectedDate] = useState(0);
     const [dates, setDates] = useState([]);
-    //const [recommendedSchedules, setRecommendedSchedules] = useState([]); // 유동 스케줄 데이터 상태
+    const [recommendedSchedules, setRecommendedSchedules] = useState([]); // 유동 스케줄 데이터 상태
     const [isLoading, setLoading] = useState(false); // 로딩 상태를 저장할 상태 변수
 
     const [timeTable, setTimeTable] = useState([]);
+    */
+
 /*
     const goToRecoIng = async () => {
         try {
@@ -52,7 +51,7 @@ const RecommendationPage = () => {
         }
     };
     */
-
+/*
     useEffect(() => {
         const today = new Date();
         const dateList = [];
@@ -92,6 +91,7 @@ const RecommendationPage = () => {
 const RecommendationPage = () => {
     const navigate = useNavigate();
     const [timeTable, setTimeTable] = useState([]);
+    const [isLoading, setLoading] = useState(false); // 로딩 상태를 저장할 상태 변수
 
     useEffect(() => {
         const fetchTodaySchedules = async () => {
@@ -182,10 +182,6 @@ const RecommendationPage = () => {
                 &lt;
             </button>
             <button type="submit" className="reco-submit" form="reco-form" onClick={goToRecoIngMake}>추천</button>
-
-            {/* 로딩 상태일 때 로딩 화면을 표시 */}
-            {isLoading && <Loading />}
-
             {/* 타임 테이블 */}
             <div className="reco-timetable-container">
                 <div className="reco-timetable">

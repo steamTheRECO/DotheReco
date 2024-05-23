@@ -22,10 +22,8 @@ const Main = () => {
     const [showEstimatedPicker, setShowEstimatedPicker] = useState(false);
     const [selectedEstimated, setSelectedEstimated] = useState('');
 
-
   //  const [recommendedSlots, setRecommendedSlots] = useState([]); /////
-
- //   const [recommendedTimes, setRecommendedTimes] = useState([]); // 추천된 시간대를 저장하는 상태
+    const [recommendedTimes, setRecommendedTimes] = useState([]); // 추천된 시간대를 저장하는 상태
 
     const getCategoryColor = (categoryCode) => {
         // 카테고리 코드에 따라 다른 색상을 반환
