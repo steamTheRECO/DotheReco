@@ -5,6 +5,7 @@ import TimeTableImage from "./images/Time table.png";
 import CalendarImage from "./images/Calendar.png";
 import TodoListImage from "./images/할 일 list.png";
 import SettingImage from "./images/Setting.png";
+import Loading from './loading'; // Import the Loading component
 
 // 카테고리별 색상 정의
 const categoryColors = {
@@ -150,6 +151,10 @@ const RecommendationPage = () => {
                 &lt;
             </button>
             <button type="submit" className="reco-submit" form="reco-form" onClick={goToRecoIngMake}>추천</button>
+
+            {/* 로딩 상태일 때 로딩 화면을 표시 */}
+            {isLoading && <Loading />}
+
             {/* 타임 테이블 */}
             <div className="reco-timetable-container">
                 <div className="reco-timetable">
