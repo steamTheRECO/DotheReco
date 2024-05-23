@@ -115,17 +115,24 @@ const Timeline = () => {
         navigate('/ToDolist');
     };
 
-    const goToReco=()=>{
-        navigate('/Recommendation');
+    const goToReco = () => {
+        const todayEvents = timeTable.filter(item => {
+            const [hour] = item.startTime.split(':');
+            return parseInt(hour) >= 7 || parseInt(hour) === 0;
+        });
+        navigate('/Recommendation', { state: { todayEvents } });
     }
+
 
     const goToSetting=()=>{
         navigate('/Setting');
     }
 
-    const goToWalkingMap=()=>{
+
+    const goToWalkingMap=()=>{ // 충돌나서 얘 살렸음
         navigate('/walkingMap')
     }
+
 
     const toggleReminder = (id) => {
         setReminders(reminders.map(reminder =>
