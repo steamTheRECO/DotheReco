@@ -115,13 +115,19 @@ const Timeline = () => {
         navigate('/ToDolist');
     };
 
-    const goToReco=()=>{
-        navigate('/Recommendation');
+    const goToReco = () => {
+        const todayEvents = timeTable.filter(item => {
+            const [hour] = item.startTime.split(':');
+            return parseInt(hour) >= 7 || parseInt(hour) === 0;
+        });
+        navigate('/Recommendation', { state: { todayEvents } });
     }
+
 
     const goToSetting=()=>{
         navigate('/Setting');
     }
+
 
     const toggleReminder = (id) => {
         setReminders(reminders.map(reminder =>
