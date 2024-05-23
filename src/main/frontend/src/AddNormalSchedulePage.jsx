@@ -84,7 +84,7 @@ const AddNormalSchedulePage = () => {
                 fixedStartTime: scheduleData.fixedStartTime ? scheduleData.fixedStartTime + ":00" : "00:00:00",
                 fixedEndTime: scheduleData.fixedEndTime ? scheduleData.fixedEndTime + ":00" : "00:00:00",
                 categoryCode: scheduleData.categoryCode ? parseInt(scheduleData.categoryCode, 10) : null,
-                placeCode: scheduleData.placeCode ? parseInt(scheduleData.placeCode, 10) : null,
+                placeName: scheduleData.placeName, // placeName으로 수정
             };
 
             await axios.post('http://localhost:8080/api/fixed', formattedData); // 백엔드 서버로 데이터 전송
