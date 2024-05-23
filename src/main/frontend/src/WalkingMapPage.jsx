@@ -27,10 +27,10 @@ const WalkingMapPage = () => {
     const [mapInitialized, setMapInitialized] = useState(false);
     const [map, setMap] = useState(null);
     const [markers, setMarkers] = useState([]);
-    const [userLocation, setUserLocation] = useState({lat: 37.561451, lon: 126.946778}); // 기본값은 이화여자대학교
-    const [coordinate1, setCoordinate1] = useState({lat: 37.556273117267686, lon: 126.93460205658282}); // 볼링장 좌표 1
-    const [coordinate2, setCoordinate2] = useState({lat: 37.558842397721314, lon: 126.94639583795444}); // 불밥 좌표 2
-    const [coordinate3, setCoordinate3] = useState({lat: 37.56680149281015, lon: 126.9487473277085}); // 신공학관 좌표
+    const [userLocation, setUserLocation] = useState({lat: 37.56170342835584, lon: 126.94238994640058}); // 기본값은 이화여자대학교
+    const [coordinate1, setCoordinate1] = useState({lat: 37.56680149281015, lon: 126.9487473277085}); // 신공학관 좌표
+    const [coordinate2, setCoordinate2] = useState({lat: 37.558798426576146, lon: 126.93931655974903}); // 올리브영 좌표
+    const [coordinate3, setCoordinate3] = useState({lat: 37.556049830250984, lon: 126.93824646263005}); // 헬스보이짐 좌표
     const mapRef = useRef(null);
     const navigate = useNavigate();
     const location = useLocation();
@@ -76,7 +76,7 @@ const WalkingMapPage = () => {
                 center: new window.Tmapv3.LatLng(userLocation.lat, userLocation.lon),
                 width: "100%",
                 height: "800px",
-                zoom: 16
+                zoom: 14
             });
             setMap(mapInstance);
 
