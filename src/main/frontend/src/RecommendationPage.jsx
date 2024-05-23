@@ -5,7 +5,10 @@ import TimeTableImage from "./images/Time table.png";
 import CalendarImage from "./images/Calendar.png";
 import TodoListImage from "./images/할 일 list.png";
 import SettingImage from "./images/Setting.png";
+
 import Loading from './loading'; // Import the Loading component
+import axios from 'axios';
+
 
 // 카테고리별 색상 정의
 const categoryColors = {
@@ -21,7 +24,7 @@ const categoryNames = {
     2: '예약',
     3: '수업'
 };
-
+/*
 const RecommendationPage = () => {
     const navigate = useNavigate();
     const [selectedDate, setSelectedDate] = useState(0);
@@ -85,6 +88,34 @@ const RecommendationPage = () => {
         };
         loadEvents();
     }, [selectedDate]);
+*/
+const RecommendationPage = () => {
+    const navigate = useNavigate();
+    const [timeTable, setTimeTable] = useState([]);
+
+    useEffect(() => {
+        const fetchTodaySchedules = async () => {
+            const today = new Date().toISOString().split('T')[0];
+            try {
+                const response = await axios.get(`http://localhost:8080/api/fixed/date/${today}`);
+                const eventsForToday = response.data.map(event => ({
+                    startTime: event.fixedStartTime,
+                    endTime: event.fixedEndTime,
+                    event: event.fixedTitle,
+                    category: event.categoryCode
+                }));
+                setTimeTable(eventsForToday);
+            } catch (error) {
+                console.error('일정을 가져오는 중 오류 발생:', error);
+            }
+        };
+
+        fetchTodaySchedules();
+    }, []);
+
+    const goToRecoIng = () => {
+        navigate('/RecoIng');
+    };
 
     const goToTimeLine = () => {
         navigate('/timeLine');
