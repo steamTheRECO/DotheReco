@@ -84,6 +84,7 @@ public class UnfixedService {
         unfixed.setUnfixedCompleted(false);
         unfixed.setUnfixedRecommended(false);
         unfixed.setReminderMark(false);
+        unfixed.setIsKeyword(dto.getIsKeyword());
 
         // 카테고리 설정
         if (dto.getCategoryId() != null) {

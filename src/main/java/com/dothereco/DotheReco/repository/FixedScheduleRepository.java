@@ -14,4 +14,5 @@ public interface FixedScheduleRepository extends JpaRepository<Fixed, Long> {
   List<Fixed> findByFixedStartDayBetween(LocalDate startDate, LocalDate endDate);
     List<Fixed> findAllByFixedStartDay(LocalDate fixedStartDay);
 
+
 }

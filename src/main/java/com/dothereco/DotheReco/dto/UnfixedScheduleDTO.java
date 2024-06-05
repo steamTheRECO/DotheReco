@@ -19,5 +19,6 @@ public class UnfixedScheduleDTO {
    // private Boolean reminderMark;
     private Long categoryId;
     private String placeName;
+    private Boolean isKeyword;
 
 }

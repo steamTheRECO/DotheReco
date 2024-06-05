@@ -10,6 +10,7 @@ const AddFlexSchedulePage = () => {
     const { id } = useParams();
     const location = useLocation();
     const [selectedPlace, setSelectedPlace] = useState('');
+    const [isKeyword, setIsKeyword] = useState(true);
     const [scheduleData, setScheduleData] = useState({
         flexTitle: '',
         flexDuration: '',
@@ -46,6 +47,7 @@ const AddFlexSchedulePage = () => {
 
         if (location.state && location.state.place) {
             setSelectedPlace(location.state.place);
+            setIsKeyword(location.state.scheduleData?.isKeyword ?? true);
             setScheduleData(prevData => ({
                 ...prevData,
                 placeName: location.state.place
@@ -99,7 +101,8 @@ const AddFlexSchedulePage = () => {
                 //placeId: scheduleData.placeCode ? parseInt(scheduleData.placeCode, 10) : null,
                 placeName: scheduleData.placeName,
                 unfixedImportance: scheduleData.importance,
-                reminderMark: false
+                reminderMark: false,
+                isKeyword: isKeyword
             };
 
             let response;
