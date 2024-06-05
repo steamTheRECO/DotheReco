@@ -9,17 +9,22 @@ import axios from 'axios';
 
 // 카테고리별 색상 정의
 const categoryColors = {
-    1: '#F0CAB9', // 약속
-    2: '#FAE4A8', // 예약
-    3: '#B9DEF0', // 수업
+    1: '#DBE9CD', // 학교수업
+    2: '#F0CAB9', // 과제
+    3: '#e9c6ff', // 팀플
+    4: '#FAE4A8', // 운동
+    5: '#B9DEF0', // 약속
+    6: '#e2e2da', // 기타
     // 추가 카테고리와 색상을 여기에 정의
 };
 
 const categoryNames = {
-    0: '졸프',
-    1: '약속',
-    2: '예약',
-    3: '수업'
+    1: '학교수업',
+    2: '과제',
+    3: '팀플',
+    4: '운동',
+    5: '약속',
+    6: '기타'
 };
 /*
 const RecommendationPage = () => {

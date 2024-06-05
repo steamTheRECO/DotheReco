@@ -9,6 +9,7 @@ import java.time.LocalTime;
 @Getter
 @Setter
 public class UnfixedScheduleDTO {
+    private Long unfixedCode;
     private String unfixedTitle;
     private LocalDate scheduleDate;
     private LocalTime unfixedTime;
@@ -17,6 +18,6 @@ public class UnfixedScheduleDTO {
     private String unfixedMemo;
    // private Boolean reminderMark;
     private Long categoryId;
-    private Long placeId;
+    private String placeName;
 
 }

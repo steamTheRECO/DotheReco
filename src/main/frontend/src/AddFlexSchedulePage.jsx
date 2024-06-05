@@ -36,7 +36,7 @@ const AddFlexSchedulePage = () => {
                         flexDeadline: eventToEdit.unfixedDeadline,
                         flexMemo: eventToEdit.unfixedMemo,
                         categoryCode: eventToEdit.category ? eventToEdit.category.categoryCode : '',
-                        placeCode: eventToEdit.place ? eventToEdit.place.placeCode : '',
+                        placeName: eventToEdit.place ? eventToEdit.place.placeName : '',
                         importance: eventToEdit.unfixedImportance,
                         repeatDays: []
                     });
@@ -96,7 +96,8 @@ const AddFlexSchedulePage = () => {
                 unfixedDeadline: scheduleData.flexDeadline,  // 날짜만 전송
                 unfixedMemo: scheduleData.flexMemo,
                 categoryId: scheduleData.categoryCode ? parseInt(scheduleData.categoryCode, 10) : null,
-                placeId: scheduleData.placeCode ? parseInt(scheduleData.placeCode, 10) : null,
+                //placeId: scheduleData.placeCode ? parseInt(scheduleData.placeCode, 10) : null,
+                placeName: scheduleData.placeName,
                 unfixedImportance: scheduleData.importance,
                 reminderMark: false
             };

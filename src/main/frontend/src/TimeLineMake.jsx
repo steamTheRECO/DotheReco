@@ -7,21 +7,25 @@ import TodoListImage from "./images/할 일 list.png";
 import SettingImage from "./images/Setting.png";
 import mapImage from "./images/map.png";
 import recommendationImage from "./images/recommendation.png";
-import axios from 'axios';
 
 // 카테고리별 색상 정의
 const categoryColors = {
-    1: '#F0CAB9', // 약속
-    2: '#FAE4A8', // 예약
-    3: '#B9DEF0', // 수업
+    1: '#DBE9CD', // 학교수업
+    2: '#F0CAB9', // 과제
+    3: '#e9c6ff', // 팀플
+    4: '#FAE4A8', // 운동
+    5: '#B9DEF0', // 약속
+    6: '#e2e2da', // 기타
     // 추가 카테고리와 색상을 여기에 정의
 };
 
 const categoryNames = {
-    0: '졸프',
-    1: '약속',
-    2: '예약',
-    3: '수업'
+    1: '학교수업',
+    2: '과제',
+    3: '팀플',
+    4: '운동',
+    5: '약속',
+    6: '기타'
 };
 
 const TimelineMake = () => {
@@ -30,7 +34,7 @@ const TimelineMake = () => {
     const [dates, setDates] = useState([]);
     const [reminders, setReminders] = useState([
         { id: 1, text: '집 가기 전에 토익 단어 50개 외우기', checked: true },
-        { id: 2, text: 'CU 광교중앙점 삼각김밥 사오기', checked: true },
+        { id: 2, text: '콘서트 티켓팅', checked: true },
         { id: 3, text: '고양이 예방접종 예약', checked: false }
     ]);
 
@@ -50,110 +54,85 @@ const TimelineMake = () => {
             newDate.setDate(today.getDate() + i);
             const isoDate = new Date(newDate.setHours(0, 0, 0, 0)).toISOString().split('T')[0]; // ISO 형식으로 변환
             dateList.push({
-                day: days[newDate.getUTCDay()],
-                date: newDate.getUTCDate(),
+                day: days[newDate.getDay()], // getDay() 메서드로 요일을 가져옴
+                date: newDate.getDate(), // getDate() 메서드로 날짜를 가져옴
                 fullDate: isoDate // YYYY-MM-DD 형식으로 변환
-            }); //for부터 여기까지 수정함
+            });
         }
         setDates(dateList);
-        setSelectedDate(4); // Today is in the middle of the list
+        setSelectedDate(4); // 오늘 날짜가 리스트의 가운데에 위치하도록 설정
     }, []);
-    /*
-        useEffect(() => {
-            const loadEvents = () => {
-                const storedEvents = JSON.parse(localStorage.getItem('events')) || [];
-                const today = new Date();
-                today.setDate(today.getDate() + (selectedDate - 4)); // Adjust date based on selectedDate
 
-                const eventsForSelectedDate = storedEvents.filter(event => {
-                    const eventDate = new Date(event.fixedStartDay);
-                    return eventDate.toDateString() === today.toDateString();
-                });
-
-                const timeTableEvents = eventsForSelectedDate.map(event => ({
-                    startTime: event.fixedStartTime,
-                    endTime: event.fixedEndTime,
-                    event: event.fixedTitle,
-                    category: event.categoryCode // Ensure categoryCode is included
-                }));
-                setTimeTable(timeTableEvents);
-            };
-            loadEvents();
-        }, [selectedDate]);*/
-    /*
-    useEffect(() => {
-        const loadEvents = async () => {
-            if (dates.length > 0) {
-                const selectedFullDate = dates[selectedDate].fullDate;
-                try {
-                    const response = await axios.get(`http://localhost:8080/api/fixed/date/${selectedFullDate}`);
-                    const eventsForSelectedDate = response.data.map(event => ({
-                        startTime: event.fixedStartTime,
-                        endTime: event.fixedEndTime,
-                        event: event.fixedTitle,
-                        category: event.categoryCode // Ensure categoryCode is included
-                    }));
-                    setTimeTable(eventsForSelectedDate);
-                } catch (error) {
-                    console.error("일정을 가져오는 중 오류 발생:", error);
-                    setTimeTable([]); // 오류가 발생하면 빈 배열로 설정
-                }
-            }
-        };
-
-        loadEvents();
-    }, [selectedDate, dates]);*/
 
     useEffect(() => {
         const predefinedEvents = [
             {
-                startTime: '09:30',
-                endTime: '12:30',
-                event: '인공지능 과제',
-                category: 1
+                startTime: "08:00",
+                endTime: "09:30",
+                event: "인공지능",
+                category: 1,
+                place: "이화여자대학교"
             },
             {
-                startTime: '15:00',
-                endTime: '16:00',
-                event: '올리브영',
-                category: 3
+                startTime: "10:00",
+                endTime: "12:00",
+                event: "인공지능 과제",
+                category: 2,
+                place: "이화여자대학교"
             },
             {
-                startTime: '19:00',
-                endTime: '20:00',
-                event: '헬스장',
-                category: 2
+                startTime: "12:30",
+                endTime: "14:00",
+                event: "컴파일러",
+                category: 1,
+                place: "이화여자대학교"
             },
             {
-                startTime: '20:30',
-                endTime: '21:30',
-                event: '과외 준비',
-                category: 2
+                startTime: "14:00",
+                endTime: "15:00",
+                event: "점심 약속",
+                category: 5,
+                place: "이화여자대학교"
+            },
+            {
+                startTime: "16:00",
+                endTime: "19:00",
+                event: "동아리",
+                category: 6,
+                place: "이화여자대학교 포스코관"
+            },
+            {
+                startTime: "19:30",
+                endTime: "20:30",
+                event: "올리브영",
+                category: 6,
+                place: "올리브영 신촌명물거리점"
+            },
+            {
+                startTime: "20:30",
+                endTime: "21:30",
+                event: "헬스장",
+                category: 4,
+                place: "헬스보이짐 신촌점"
+            },
+            {
+                startTime: "22:00",
+                endTime: "23:00",
+                event: "과외 준비",
+                category: 2,
+                place: "신촌 럭키아파트 102동"
+            },
+            {
+                startTime: "23:00",
+                endTime: "24:00",
+                event: "분리수거",
+                category: 6,
+                place: "신촌 럭키아파트 102동"
             }
         ];
 
-        const loadEvents = async () => {
-            if (dates.length > 0) {
-                const selectedFullDate = dates[selectedDate].fullDate;
-                try {
-                    const response = await axios.get(`http://localhost:8080/api/fixed/date/${selectedFullDate}`);
-                    const fetchedEvents = response.data.map(event => ({
-                        startTime: event.fixedStartTime,
-                        endTime: event.fixedEndTime,
-                        event: event.fixedTitle,
-                        category: event.categoryCode // Ensure categoryCode is included
-                    }));
-                    const combinedEvents = [...fetchedEvents, ...predefinedEvents];
-                    setTimeTable(combinedEvents);
-                } catch (error) {
-                    console.error("일정을 가져오는 중 오류 발생:", error);
-                    setTimeTable(predefinedEvents); // 오류가 발생하면 미리 정의된 이벤트만 설정
-                }
-            }
-        };
-
-        loadEvents();
-    }, [selectedDate, dates]);
+        setTimeTable(predefinedEvents);
+    }, [selectedDate]);
 
     const goToTimeLine = () => {
         navigate('/timeLine');
@@ -319,7 +298,7 @@ const TimelineMake = () => {
                                                 key={index}
                                                 style={{
                                                     top: `${startMinute}px`,
-                                                    height: `${duration * 1.4}px`, // Each minute is 2 pixels
+                                                    height: `${duration * 1.43}px`, // Each minute is 2 pixels
                                                     backgroundColor: getCategoryColor(item.category)
                                                 }}
                                             >
@@ -348,7 +327,7 @@ const TimelineMake = () => {
                                                 key={index}
                                                 style={{
                                                     top: `${startMinute}px`,
-                                                    height: `${duration * 2}px`, // Each minute is 2 pixels
+                                                    height: `${duration * 1.5}px`, // Each minute is 2 pixels
                                                     backgroundColor: getCategoryColor(item.category)
                                                 }}
                                             >

@@ -9,53 +9,49 @@ import SettingImage from "./images/Setting.png";
 import AddImage from "./images/plus.png";
 import axios from 'axios';
 
-const ToDoListPage = () => {
-    const [schedules, setSchedules] = useState([]);
+const ToDoListMake = () => {
+    const [schedules, setSchedules] = useState([
+        { unfixedCode: 1, unfixedTitle: '올리브영', unfixedTime: '1시간', unfixedDeadline: '2024-05-23', unfixedImportance: 4,categoryId: 6, placeId: '올리브영'},
+        { unfixedCode: 2, unfixedTitle: '과외 준비', unfixedTime: '1시간', unfixedDeadline: '2024-05-23', unfixedImportance: 4,categoryId: 6 },
+        { unfixedCode: 3, unfixedTitle: '분리수거', unfixedTime: '1시간', unfixedDeadline: '2024-05-23', unfixedImportance: 5, categoryId: 6,placeId: '신촌 럭키아파트 102동' },
+        { unfixedCode: 4, unfixedTitle: '인공지능 과제', unfixedTime: '2시간', unfixedDeadline: '2024-05-24', unfixedImportance: 3,categoryId: 2 },
+        { unfixedCode: 5, unfixedTitle: '헬스장', unfixedTime: '1시간', unfixedDeadline: '2024-05-25', unfixedImportance: 3,categoryId: 4, placeId: '헬스보이짐 신촌점' },
+        { unfixedCode: 6, unfixedTitle: '컴파일러 과제', unfixedTime: '4시간', unfixedDeadline: '2024-05-25', unfixedImportance: 3,categoryId: 2 },
+        { unfixedCode: 7, unfixedTitle: '가상현실 과제', unfixedTime: '2시간', unfixedDeadline: '2024-05-25', unfixedImportance: 3,categoryId: 2 },
+        { unfixedCode: 8, unfixedTitle: '골프 연습', unfixedTime: '1시간', unfixedDeadline: '2024-05-25', unfixedImportance: 3, categoryId: 4,placeId: '골프연습장' },
+        { unfixedCode: 9, unfixedTitle: '스터디 과제', unfixedTime: '2시간', unfixedDeadline: '2024-05-25', unfixedImportance: 3,categoryId: 2 },
+        { unfixedCode: 10, unfixedTitle: '교환학생 서류 준비', unfixedTime: '2시간', unfixedDeadline: '2024-05-27', unfixedImportance: 3,categoryId: 6 },
+        { unfixedCode: 11, unfixedTitle: '서점가기', unfixedTime: '1시간', unfixedDeadline: '2024-05-29', unfixedImportance: 3, categoryId: 6,placeId: '교보문고' },
+        { unfixedCode: 12, unfixedTitle: '장보기', unfixedTime: '1시간', unfixedDeadline: '2024-05-24', unfixedImportance: 3,categoryId: 6 },
+        { unfixedCode: 13, unfixedTitle: '컴파일러 시험 공부', unfixedTime: '3시간', unfixedDeadline: '2024-05-31', unfixedImportance: 3,categoryId: 1 }
+    ]);
     const navigate = useNavigate();
 
     const categoryMap = {
-        0: '졸프',
-        1: '약속',
-        2: '예약',
-        3: '수업'
+        1: '학교수업',
+        2: '과제',
+        3: '팀플',
+        4: '운동',
+        5: '약속',
+        6: '기타'
     };
-/*
-    useEffect(() => {
-        const storedEvents = JSON.parse(localStorage.getItem('events')) || [];
-        const flexibleSchedules = storedEvents.filter(event => event.flexTitle); // Filter flexible schedules
-        const sortedSchedules = flexibleSchedules.sort((a, b) => {
-            const dateA = new Date(a.flexDeadline);
-            const dateB = new Date(b.flexDeadline);
-            return dateA - dateB;
-        });
-        setSchedules(sortedSchedules);
-    }, []);
+    /*
+        useEffect(() => {
+            const storedEvents = JSON.parse(localStorage.getItem('events')) || [];
+            const flexibleSchedules = storedEvents.filter(event => event.flexTitle); // Filter flexible schedules
+            const sortedSchedules = flexibleSchedules.sort((a, b) => {
+                const dateA = new Date(a.flexDeadline);
+                const dateB = new Date(b.flexDeadline);
+                return dateA - dateB;
+            });
+            setSchedules(sortedSchedules);
+        }, []);
 
-    const handleDelete = (index) => {
-        const updatedSchedules = schedules.filter((_, i) => i !== index);
-        setSchedules(updatedSchedules);
-        localStorage.setItem('events', JSON.stringify(updatedSchedules));
-    };*/
-    useEffect(() => {
-        const fetchSchedules = async () => {
-            try {
-                const response = await axios.get('http://localhost:8080/api/unfixed-schedules');
-                setSchedules(response.data);
-            } catch (error) {
-                console.error('Error fetching schedules:', error);
-            }
-        };
-
-        fetchSchedules();
-    }, []);
-    const handleDelete = async (id) => {
-        try {
-            await axios.delete(`http://localhost:8080/api/unfixed-schedules/${id}`);
-            setSchedules(schedules.filter(schedule => schedule.unfixedCode !== id));
-        } catch (error) {
-            console.error('Error deleting schedule:', error);
-        }
-    };
+        const handleDelete = (index) => {
+            const updatedSchedules = schedules.filter((_, i) => i !== index);
+            setSchedules(updatedSchedules);
+            localStorage.setItem('events', JSON.stringify(updatedSchedules));
+        };*/
 
 
     const handleEdit = (index) => {
@@ -115,7 +111,7 @@ const ToDoListPage = () => {
                                 <h3>{schedule.unfixedTitle}</h3>
                                 <div className="todo-actions">
                                     <FaEdit onClick={() => handleEdit(schedule.unfixedCode)} />
-                                    <FaTrash onClick={() => handleDelete(schedule.unfixedCode)} />
+
                                 </div>
                             </div>
                             <div className="todo-details">
@@ -123,7 +119,7 @@ const ToDoListPage = () => {
                                 <p>마감기한: {schedule.unfixedDeadline}</p>
                                 <p>중요도: {renderStars(schedule.unfixedImportance)}</p>
                                 <p>카테고리: {schedule.categoryId !== null ? categoryMap[schedule.categoryId] : '졸프'}</p>
-                                <p>장소: {schedule.placeName}</p> {/* 수정된 부분 */}
+                                <p>장소: {schedule.placeId}</p>
                                 <p>메모: {schedule.unfixedMemo}</p>
                             </div>
                         </div>
@@ -154,4 +150,4 @@ const ToDoListPage = () => {
     );
 };
 
-export default ToDoListPage;
+export default ToDoListMake;
