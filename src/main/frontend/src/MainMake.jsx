@@ -9,7 +9,7 @@ import CalendarImage from './images/Calendar.png';
 import TodoListImage from './images/할 일 list.png';
 import axios from 'axios';
 
-const MainMake = () => {
+const FirstMainPage = () => {
     const [date, setDate] = useState(new Date());
     const [mini_date, mini_setDate] = useState(new Date());
     const [selectedMiniDates, setSelectedMiniDates] = useState([]);
@@ -23,90 +23,357 @@ const MainMake = () => {
     const [selectedEstimated, setSelectedEstimated] = useState('');
 
     //  const [recommendedSlots, setRecommendedSlots] = useState([]); /////
-
     const [recommendedTimes, setRecommendedTimes] = useState([]); // 추천된 시간대를 저장하는 상태
-    const [showEventsPopup, setShowEventsPopup] = useState(false); // 팝업 창을 보여줄지 여부를 나타내는 상태 추가
-    const [selectedEvents, setSelectedEvents] = useState([]); // 선택된 날짜의 일정들을 저장하는 상태 추가
-
-    // 클릭한 날짜에 해당하는 일정들을 보여주는 팝업 창을 엽니다.
-    const handleDateClick = (day) => {
-        // 23일이면 팝업 창을 엽니다.
-        if (day === 23) {
-            setShowEventsPopup(true);
-            // 임의로 입력한 일정들을 선택된 일정으로 설정합니다.
-            const predefinedEventsForMay23rd = [
-                { title: '인공지능', top: '25px', backgroundColor: '#DBE9CD' },
-                { title: '인공지능 과제', top: '50px', backgroundColor: '#F0CAB9' },
-                { title: '컴파일러', top: '75px', backgroundColor: '#DBE9CD' },
-                { title: '점심 약속', top: '100px', backgroundColor: '#FFDEAD' },
-                { title: '올리브영', top: '125px', backgroundColor: '#B9DEF0' }
-            ];
-            setSelectedEvents(predefinedEventsForMay23rd);
-        }
-    };
-
-    // 팝업 창을 닫습니다.
-    const handleClosePopup = () => {
-        setShowEventsPopup(false);
-    };
 
     const getCategoryColor = (categoryCode) => {
         // 카테고리 코드에 따라 다른 색상을 반환
         switch (categoryCode) {
             case 1:
-                return '#DBE9CD'; // 카테고리 코드 1에 대한 색상
+                return '#DBE9CD'; // 학교수업
             case 2:
-                return '#F0CAB9'; // 카테고리 코드 2에 대한 색상
+                return '#F0CAB9'; // 과제
             case 3:
-                return '#CC99FF' //카테고리 코드 3에 대한 색상
+                return '#e9c6ff'; // 팀플
             case 4:
-                return '#FAE4A8' //카테고리 코드 3에 대한 색상
+                return '#FAE4A8'; // 운동
             case 5:
-                return '#B9DEF0' //카테고리 코드 3에 대한 색상
+                return '#B9DEF0'; // 생활
             case 6:
-                return '#FFDEAD' //카테고리 코드 3에 대한 색상
+                return '#FFDEAD'; // 기타
             default:
-                return '#DBE9CD'; // 기본 색상
+                return '#e2e2da'; // 기본 색상
         }
     };
-    useEffect(() => {
-        const fetchEvents = async () => {
-            try {
-                const response = await axios.get('http://localhost:8080/api/fixed');
-                setEvents(response.data);
-            } catch (error) {
-                console.error('일정을 가져오는 중 오류 발생:', error);
-            }
-        };
 
-        fetchEvents();
+    useEffect(() => {
+
+        // 미리 넣어둘 일정 데이터를 정의합니다.
+        const initialEvents = [
+            {
+                fixedTitle: '가상현실',
+                fixedStartDay: '2024-05-13',
+                fixedStartTime: '09:00',
+                fixedEndTime: '10:00',
+                categoryCode: 1,
+                color: getCategoryColor(1),
+            },
+            {
+                fixedTitle: '캡스톤',
+                fixedStartDay: '2024-05-13',
+                fixedStartTime: '12:00',
+                fixedEndTime: '13:00',
+                categoryCode: 1,
+                color: getCategoryColor(1),
+            },
+            {
+                fixedTitle: '인공지능',
+                fixedStartDay: '2024-05-14',
+                fixedStartTime: '09:00',
+                fixedEndTime: '10:00',
+                categoryCode: 1,
+                color: getCategoryColor(1),
+            },
+            {
+                fixedTitle: '컴파과제',
+                fixedStartDay: '2024-05-14',
+                fixedStartTime: '11:00',
+                fixedEndTime: '13:30',
+                categoryCode: 2,
+                color: getCategoryColor(2),
+            },
+            {
+                fixedTitle: '컴파일러',
+                fixedStartDay: '2024-05-14',
+                fixedStartTime: '15:30',
+                fixedEndTime: '17:00',
+                categoryCode: 1,
+                color: getCategoryColor(1),
+            },
+            {
+                fixedTitle: '지후약속',
+                fixedStartDay: '2024-05-15',
+                fixedStartTime: '15:00',
+                fixedEndTime: '18:00',
+                categoryCode: 5,
+                color: getCategoryColor(5),
+            },
+            {
+                fixedTitle: '컴파과제',
+                fixedStartDay: '2024-05-16',
+                fixedStartTime: '12:00',
+                fixedEndTime: '14:30',
+                categoryCode: 2,
+                color: getCategoryColor(2),
+            },
+            {
+                fixedTitle: '컴파과제',
+                fixedStartDay: '2024-05-17',
+                fixedStartTime: '09:00',
+                fixedEndTime: '10:00',
+                categoryCode: 2,
+                color: getCategoryColor(2),
+            },
+            {
+                fixedTitle: '가상현실',
+                fixedStartDay: '2024-05-20',
+                fixedStartTime: '09:00',
+                fixedEndTime: '10:00',
+                categoryCode: 1,
+                color: getCategoryColor(1),
+            },
+            {
+                fixedTitle: '캡스톤',
+                fixedStartDay: '2024-05-20',
+                fixedStartTime: '12:00',
+                fixedEndTime: '13:00',
+                categoryCode: 1,
+                color: getCategoryColor(1),
+            },
+            {
+                fixedTitle: '줌졸프회의',
+                fixedStartDay: '2024-05-20',
+                fixedStartTime: '17:30',
+                fixedEndTime: '19:00',
+                categoryCode: 3,
+                color: getCategoryColor(3),
+            },
+            {
+                fixedTitle: '인공지능',
+                fixedStartDay: '2024-05-21',
+                fixedStartTime: '09:00',
+                fixedEndTime: '10:00',
+                categoryCode: 1,
+                color: getCategoryColor(1),
+            },
+            {
+                fixedTitle: '점심 약속',
+                fixedStartDay: '2024-05-21',
+                fixedStartTime: '12:00',
+                fixedEndTime: '13:30',
+                categoryCode: 5,
+                color: getCategoryColor(5),
+            },
+            {
+                fixedTitle: '교보문고',
+                fixedStartDay: '2024-05-21',
+                fixedStartTime: '18:00',
+                fixedEndTime: '19:00',
+                categoryCode: 7,
+                color: getCategoryColor(7),
+            },
+            {
+                fixedTitle: '가상현실',
+                fixedStartDay: '2024-05-22',
+                fixedStartTime: '09:00',
+                fixedEndTime: '10:00',
+                categoryCode: 1,
+                color: getCategoryColor(1),
+            },
+            {
+                fixedTitle: '캡스톤',
+                fixedStartDay: '2024-05-22',
+                fixedStartTime: '11:00',
+                fixedEndTime: '12:00',
+                categoryCode: 1,
+                color: getCategoryColor(1),
+            },
+            {
+                fixedTitle: '컴파팀플',
+                fixedStartDay: '2024-05-22',
+                fixedStartTime: '14:00',
+                fixedEndTime: '15:00',
+                categoryCode: 3,
+                color: getCategoryColor(3),
+            },
+            {
+                fixedTitle: '골프레슨',
+                fixedStartDay: '2024-05-22',
+                fixedStartTime: '19:00',
+                fixedEndTime: '20:00',
+                categoryCode: 4,
+                color: getCategoryColor(4),
+            },
+            {
+                fixedTitle: '인공지능',
+                fixedStartDay: '2024-05-23',
+                fixedStartTime: '09:00',
+                fixedEndTime: '10:00',
+                categoryCode: 1,
+                color: getCategoryColor(1),
+            },
+            {
+                fixedTitle: '인공지능과제',
+                fixedStartDay: '2024-05-23',
+                fixedStartTime: '10:00',
+                fixedEndTime: '11:00',
+                categoryCode: 2,
+                color: getCategoryColor(2),
+            },
+            {
+                fixedTitle: '컴파일러',
+                fixedStartDay: '2024-05-23',
+                fixedStartTime: '11:00',
+                fixedEndTime: '12:00',
+                categoryCode: 1,
+                color: getCategoryColor(1),
+            },
+            {
+                fixedTitle: '점심 약속',
+                fixedStartDay: '2024-05-23',
+                fixedStartTime: '12:30',
+                fixedEndTime: '13:30',
+                categoryCode: 5,
+                color: getCategoryColor(5),
+            },
+            {
+                fixedTitle: '동아리',
+                fixedStartDay: '2024-05-23',
+                fixedStartTime: '14:00',
+                fixedEndTime: '15:00',
+                categoryCode: 7,
+                color: getCategoryColor(7),
+            },
+            {
+                fixedTitle: '올리브영',
+                fixedStartDay: '2024-05-23',
+                fixedStartTime: '16:00',
+                fixedEndTime: '17:00',
+                categoryCode: 7,
+                color: getCategoryColor(7),
+            },
+            {
+                fixedTitle: '졸프회의',
+                fixedStartDay: '2024-05-24',
+                fixedStartTime: '12:00',
+                fixedEndTime: '14:00',
+                categoryCode: 3,
+                color: getCategoryColor(3),
+            },
+            {
+                fixedTitle: '가족저녁식사',
+                fixedStartDay: '2024-05-24',
+                fixedStartTime: '17:00',
+                fixedEndTime: '18:00',
+                categoryCode: 5,
+                color: getCategoryColor(5),
+            },
+            {
+                fixedTitle: '가상현실',
+                fixedStartDay: '2024-05-27',
+                fixedStartTime: '09:00',
+                fixedEndTime: '10:00',
+                categoryCode: 1,
+                color: getCategoryColor(1),
+            },
+            {
+                fixedTitle: '캡스톤',
+                fixedStartDay: '2024-05-27',
+                fixedStartTime: '12:00',
+                fixedEndTime: '13:00',
+                categoryCode: 1,
+                color: getCategoryColor(1),
+            },
+            {
+                fixedTitle: '줌졸프회의',
+                fixedStartDay: '2024-05-27',
+                fixedStartTime: '17:30',
+                fixedEndTime: '19:00',
+                categoryCode: 3,
+                color: getCategoryColor(3),
+            },
+            {
+                fixedTitle: '인공지능',
+                fixedStartDay: '2024-05-28',
+                fixedStartTime: '09:00',
+                fixedEndTime: '10:00',
+                categoryCode: 1,
+                color: getCategoryColor(1),
+            },
+            {
+                fixedTitle: '점심 약속',
+                fixedStartDay: '2024-05-28',
+                fixedStartTime: '12:00',
+                fixedEndTime: '13:30',
+                categoryCode: 5,
+                color: getCategoryColor(5),
+            },
+            {
+                fixedTitle: '컴파일러',
+                fixedStartDay: '2024-05-28',
+                fixedStartTime: '15:30',
+                fixedEndTime: '17:00',
+                categoryCode: 1,
+                color: getCategoryColor(1),
+            },
+            {
+                fixedTitle: '가상현실',
+                fixedStartDay: '2024-05-29',
+                fixedStartTime: '09:00',
+                fixedEndTime: '10:00',
+                categoryCode: 1,
+                color: getCategoryColor(1),
+            },
+            {
+                fixedTitle: '캡스톤',
+                fixedStartDay: '2024-05-29',
+                fixedStartTime: '11:00',
+                fixedEndTime: '12:00',
+                categoryCode: 1,
+                color: getCategoryColor(1),
+            },
+            {
+                fixedTitle: '컴파팀플',
+                fixedStartDay: '2024-05-29',
+                fixedStartTime: '14:00',
+                fixedEndTime: '15:00',
+                categoryCode: 3,
+                color: getCategoryColor(3),
+            },
+            {
+                fixedTitle: '골프레슨',
+                fixedStartDay: '2024-05-29',
+                fixedStartTime: '19:00',
+                fixedEndTime: '20:00',
+                categoryCode: 4,
+                color: getCategoryColor(4),
+            },
+            {
+                fixedTitle: '인공지능',
+                fixedStartDay: '2024-05-30',
+                fixedStartTime: '09:00',
+                fixedEndTime: '10:00',
+                categoryCode: 1,
+                color: getCategoryColor(1),
+            },
+            {
+                fixedTitle: '컴파일러',
+                fixedStartDay: '2024-05-30',
+                fixedStartTime: '11:00',
+                fixedEndTime: '12:00',
+                categoryCode: 1,
+                color: getCategoryColor(1),
+            },
+            {
+                fixedTitle: '병원 예약',
+                fixedStartDay: '2024-05-30',
+                fixedStartTime: '12:30',
+                fixedEndTime: '13:30',
+                categoryCode: 7,
+                color: getCategoryColor(7),
+            },
+            {
+                fixedTitle: '저녁 약속',
+                fixedStartDay: '2024-05-30',
+                fixedStartTime: '12:30',
+                fixedEndTime: '13:30',
+                categoryCode: 5,
+                color: getCategoryColor(5),
+            }
+        ];
+
+        setEvents(initialEvents);
+
     }, []);
-
-    /*
-// 외부 페이지에서 전달받은 데이터 처리
-    useEffect(() => {
-        // 기존 이벤트 목록을 가져옵니다.
-        const storedEvents = JSON.parse(localStorage.getItem('events')) || [];
-        setEvents(storedEvents);
-
-        // 새로운 이벤트가 전달되었는지 확인하고, 이벤트 목록에 추가
-        if (location.state && location.state.newEvent) {
-            const newEvent = location.state.newEvent;
-            // 이미 같은 날짜에 해당하는 이벤트가 있는지 확인합니다.
-            const existingEvent = storedEvents.find(event => {
-                const eventStartDate = new Date(event.fixedStartDay);
-                const newEventStartDate = new Date(newEvent.fixedStartDay);
-                return eventStartDate.toDateString() === newEventStartDate.toDateString();
-            });
-            // 중복된 이벤트가 없는 경우에만 추가합니다.
-            if (!existingEvent) {
-                const updatedEvents = [...storedEvents, newEvent];
-                setEvents(updatedEvents);
-                localStorage.setItem('events', JSON.stringify(updatedEvents));
-            }
-        }
-    }, [location.state]);
-*/
     useEffect(() => {
         // 외부 페이지에서 전달받은 데이터 처리
         if (location.state && location.state.newEvent) {
@@ -116,6 +383,7 @@ const MainMake = () => {
             navigate(location.pathname, { replace: true });
         }
     }, [location.state?.newEvent]);
+
     const renderCalendar = () => {
         // 현재 날짜와 이벤트 목록을 가져옵니다.
         const viewYear = date.getFullYear();
@@ -142,14 +410,6 @@ const MainMake = () => {
             }
         }
 
-        const predefinedEventsForMay23rd = [
-            { title: '인공지능', top: '25px', backgroundColor: '#DBE9CD' },
-            { title: '인공지능 과제', top: '50px', backgroundColor: '#F0CAB9' },
-            { title: '컴파일러', top: '75px', backgroundColor: '#DBE9CD' },
-            { title: '점심 약속', top: '100px', backgroundColor: '#FFDEAD' },
-            { title: '올리브영', top: '125px', backgroundColor: '#B9DEF0' }
-        ];
-
         // 각 날짜를 렌더링합니다.
         return days.map((day, index) => {
             const currentDate = new Date(viewYear, viewMonth, day);
@@ -159,36 +419,17 @@ const MainMake = () => {
                 const eventStartDate = new Date(event.fixedStartDay);
                 return eventStartDate.toDateString() === currentDate.toDateString();
             }).sort((a, b) => {
+                // 이벤트를 시작 시간 순으로 정렬합니다.
                 const aStartTime = new Date(`${a.fixedStartDay}T${a.fixedStartTime}`);
                 const bStartTime = new Date(`${b.fixedStartDay}T${b.fixedStartTime}`);
                 return aStartTime - bStartTime;
             });
 
-            // 오늘이 5월 23일이고 빈 칸이 아닌 경우에만 보이도록 설정
-            if (isToday && viewMonth === 4 && day === 23 && day !== '') {
-                return (
-                    <div key={index} className={`day today`}>
-                        {day}
-                        <div className="event-indicator-container">
-                            {/* 임의로 추가한 일정만 보이도록 함 */}
-                            {predefinedEventsForMay23rd.map((event, eventIndex) => (
-                                <div
-                                    key={eventIndex}
-                                    className="event-indicator"
-                                    style={{ top: event.top, backgroundColor: event.backgroundColor }}
-                                >
-                                    <div className="event-title">{event.title}</div>
-                                </div>
-                            ))}
-                        </div>
-                    </div>
-                );
-            }
-
             return (
                 <div key={index} className={`day ${isToday ? 'today' : ''}`}>
                     {day}
                     <div className="event-indicator-container">
+                        {/* 유동 스케줄 표시 */}
                         {flexEvents.map((event, eventIndex) => (
                             <div
                                 key={eventIndex}
@@ -201,6 +442,7 @@ const MainMake = () => {
                                 <div className="event-title">{event.flexTitle}</div>
                             </div>
                         ))}
+                        {/* 일반 스케줄 표시 */}
                         {eventList.map((event, eventIndex) => (
                             <div
                                 key={eventIndex}
@@ -261,7 +503,6 @@ const MainMake = () => {
                 setSelectedMiniDates(Array.from(selectedDatesRef.current));
             }
         };
-
         const handleMouseUp = () => {
             setIsDragging(false);
         };
@@ -310,100 +551,52 @@ const MainMake = () => {
         document.querySelector('.searchList-popup-wrap').style.display = 'none';
         document.querySelector('.back-bg').style.display = 'none';
     };
+    //};
+    const onRecommendClick = async () => {
+        try {
+            const selectedDates = selectedMiniDates.map(day => {
+                const date = new Date(mini_date.getFullYear(), mini_date.getMonth(), day + 1); // 날짜를 올바르게 맞추기 위해 day + 1
+                return date.toISOString().split('T')[0];
+            });
 
-    /*
-        const onRecommendClick = () => {
+            const durationParts = selectedEstimated.split(':');
+            const hours = parseInt(durationParts[0]);
+            const minutes = parseInt(durationParts[1]);
+            const expectedDuration = `PT${hours}H${minutes}M`;
+
+            const response = await axios.post('http://localhost:8080/api/time/recommend', {
+                dates: selectedDates,
+                expectedDuration: expectedDuration,
+            });
+
+            const formattedTimes = response.data.map(slot => ({
+                date: slot.date,
+                startTime: slot.startTime,
+                endTime: slot.endTime,
+            }));
+
+            setRecommendedTimes(formattedTimes);
+
             document.querySelector('.search-popup-wrap').style.display = 'none';
             document.querySelector('.searchList-popup-wrap').style.display = 'block';
             document.querySelector('.back-bg').style.display = 'block';
-        };
-        const onRecommendClick = async () => {
-            try {
-                const dateFormatted = mini_date.toISOString().split('T')[0];
-                const durationParts = selectedEstimated.split(':');
-                const hours = parseInt(durationParts[0]);
-                const minutes = parseInt(durationParts[1]);
-                const expectedDuration = `PT${hours}H${minutes}M`;
-
-                const response = await axios.get('http://localhost:8080/api/time/recommend', {
-                    params: {
-                        date: dateFormatted,
-                        expectedDuration: expectedDuration,
-                    },
-                });
-
-                console.log('추천된 시간대:', response.data);
-                setRecommendedSlots(response.data);
-
-                document.querySelector('.search-popup-wrap').style.display = 'none';
-                document.querySelector('.searchList-popup-wrap').style.display = 'block';
-                document.querySelector('.back-bg').style.display = 'block';
-            } catch (error) {
-                console.error('시간대 추천 오류:', error);
-            }*/
-
-
-    const onRecommendClick = async () => {
-        document.querySelector('.search-popup-wrap').style.display = 'none';
-        document.querySelector('.searchList-popup-wrap').style.display = 'block';
-        document.querySelector('.back-bg').style.display = 'block';
-
-        // 임의의 추천 시간 데이터 생성
-        const mockRecommendedTimes = [
-            {
-                date: '2024년 5월 22일',
-                starttime: '15:00' ,
-                endtime: '18:00'
-            },
-            {
-                date: '2024년 5월 23일',
-                starttime: '09:00',
-                endtime: '18:00'
-            },
-            {
-                date: '2024년 5월 24일',
-                starttime: '14:00',
-                endtime: '18:00'
-            },
-            {
-                date: '2024년 5월 24일',
-                starttime: '14:00',
-                endtime: '18:00'
-            }
-        ];
-        setRecommendedTimes(mockRecommendedTimes);
-
-        /*
-        try {
-            //임의의 데이터 생성
-            const selectedDates = selectedMiniDates.map(day => new Date(mini_date.getFullYear(), mini_date.getMonth(), day).toISOString());
-
-            // 백엔드 호출
-            const response = await axios.post('/api/recommend-times', {
-                dates: selectedDates,
-                estimatedTime: selectedEstimated,
-            });
-
-            setRecommendedTimes(response.data.recommendedTimes);
         } catch (error) {
-            console.error('Error fetching recommended times:', error);
+            console.error('시간대 추천 오류:', error);
         }
-        */
-
     };
 
-    const goToaddNormalSchedule = () => {
+    const goToaddNormalMake = () => {
         // "일반 스케줄 추가" 버튼을 누를 때 기존의 일정들을 유지하기 위해 새로운 이벤트를 추가하지 않습니다.
-        navigate('/addNormalSchedule', { state: { events: events } });
+        navigate('/addNormalMake', { state: { events: events } });
     };
 
-    const goToAddFlexSchedule = () => {
+    const goToAddFlexMake = () => {
         // "일반 스케줄 추가" 버튼을 누를 때 기존의 일정들을 유지하기 위해 새로운 이벤트를 추가하지 않습니다.
-        navigate('/addFlexSchedule', { state: { events: events } });
+        navigate('/addFlexMake', { state: { events: events } });
     };
 
-    const goToTimeLine=()=>{
-        navigate('/timeLine');
+    const goToTimeLineMake=()=>{
+        navigate('/timeLineMake');
     }
 
     const goToCalendar = () => {
@@ -423,21 +616,6 @@ const MainMake = () => {
         document.querySelector('.searchList-popup-wrap').style.display = 'none';
         document.querySelector('.back-bg').style.display = 'block';
     };
-
-    useEffect(() => {
-        // 새로운 이벤트가 추가되면 이를 캘린더에 반영
-        if (location.state && location.state.newEvent) {
-            const newEvent = location.state.newEvent;
-            const updatedEvents = [...events, newEvent];
-            setEvents(updatedEvents);
-        }
-    }, [location.state]);
-
-    useEffect(() => {
-        // 페이지를 새로고침할 때마다 로컬 스토리지에서 이전에 저장된 이벤트 목록을 가져와서 캘린더에 표시합니다.
-        const storedEvents = JSON.parse(localStorage.getItem('events')) || [];
-        setEvents(storedEvents);
-    }, []);
 
     const handleEstimatedClick = () => {
         setShowEstimatedPicker(true);
@@ -530,22 +708,23 @@ const MainMake = () => {
                             {recommendedTimes.map((time, index) => (
                                 <div key={index} className="recommended-time">
                                     <div className="time-box">
-                                        날짜: {time.date}<br/>
-                                        시간: {time.starttime} - {time.endtime}
+                                        날짜: {time.date}<br />
+                                        시작 시간: {time.startTime}<br />
+                                        종료 시간: {time.endTime}
                                     </div>
                                 </div>
                             ))}
                         </div>
                     </div>
                 </div>
-
             </div>
+
 
             {/*addSchedule 눌렀을 때 뜨는 팝업 창*/}
             <div className="addSche-popup-wrap">
                 <div className="addSche-button-container">
-                    <button className="addNormalSchedule-Button" onClick={goToaddNormalSchedule}>일반 스케줄 추가</button>
-                    <button className="addFlexSchedule-Button" onClick={goToAddFlexSchedule}>유동 스케줄 추가</button>
+                    <button className="addNormalSchedule-Button" onClick={goToaddNormalMake}>일반 스케줄 추가</button>
+                    <button className="addFlexSchedule-Button" onClick={goToAddFlexMake}>유동 스케줄 추가</button>
                     <button>리마인더 추가</button>
                 </div>
             </div>
@@ -577,24 +756,10 @@ const MainMake = () => {
                 </div>
             </div>
 
-            {/* 선택된 날짜의 일정을 보여주는 팝업 창 */}
-            {showEventsPopup && (
-                <div className="events-popup">
-                    <div className="events-list">
-                        {selectedEvents.map((event, index) => (
-                            <div key={index} className="event">
-                                <div className="event-title">{event.title}</div>
-                            </div>
-                        ))}
-                    </div>
-                    <button onClick={handleClosePopup}>닫기</button>
-                </div>
-            )}
-
             {/*하단 메뉴 바*/}
             <div className="menu">
                 <div className="menu-details">
-                    <img className="TimeTableImage" src={TimeTableImage} alt="Time Table" onClick={goToTimeLine}/>
+                    <img className="TimeTableImage" src={TimeTableImage} alt="Time Table" onClick={goToTimeLineMake}/>
                     <p>Time table</p>
                 </div>
                 <div className="menu-details">
@@ -614,4 +779,4 @@ const MainMake = () => {
     );
 };
 
-export default MainMake;
+export default FirstMainPage;

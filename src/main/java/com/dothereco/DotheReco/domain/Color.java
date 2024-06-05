@@ -5,8 +5,8 @@ public enum Color {
     GREEN("#DBE9CD"),
     BLUE("#B9DEF0"),
     YELLOW("#FAE4A8"),
-    ORANGE("#FFA500"),
-    PURPLE("#CC99FF");
+    ORANGE("#e2e2da"),
+    PURPLE("#e9c6ff");
     private final String hexCode;
 
 

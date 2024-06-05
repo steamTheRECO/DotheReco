@@ -33,13 +33,13 @@ const Main = () => {
             case 2:
                 return '#F0CAB9'; // 카테고리 코드 2에 대한 색상
             case 3:
-                return '#CC99FF'; // 카테고리 코드 3에 대한 색상
+                return '#e9c6ff'; // 카테고리 코드 3에 대한 색상
             case 4:
                 return '#FAE4A8'; // 카테고리 코드 4에 대한 색상
             case 5:
                 return '#B9DEF0'; // 카테고리 코드 5에 대한 색상
             case 6:
-                return '#FFDEAD'; // 카테고리 코드 6에 대한 색상
+                return '#e2e2da'; // 카테고리 코드 6에 대한 색상
             default:
                 return '#DBE9CD'; // 기본 색상
         }
@@ -420,8 +420,8 @@ const Main = () => {
         navigate('/Main');
     };
 
-    const goToToDoList=()=>{
-        navigate('/ToDoList');
+    const goToDoListMake=()=>{
+        navigate('/ToDoListMake');
     }
 
     const goToSetting=()=>{
@@ -599,7 +599,7 @@ const Main = () => {
                     <p>Calendar</p>
                 </div>
                 <div className="menu-details">
-                    <img className="TodoListImage" src={TodoListImage} alt="To Do List" onClick={goToToDoList}/>
+                    <img className="TodoListImage" src={TodoListImage} alt="To Do List" onClick={goToDoListMake}/>
                     <p>To Do list</p>
                 </div>
                 <div className="menu-details">

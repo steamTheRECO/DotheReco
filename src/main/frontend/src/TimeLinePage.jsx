@@ -11,19 +11,23 @@ import axios from 'axios';
 
 // 카테고리별 색상 정의
 const categoryColors = {
-    1: '#F0CAB9', // 약속
-    2: '#FAE4A8', // 예약
-    3: '#B9DEF0', // 수업
+    1: '#DBE9CD', // 학교수업
+    2: '#F0CAB9', // 과제
+    3: '#e9c6ff', // 팀플
+    4: '#FAE4A8', // 운동
+    5: '#B9DEF0', // 약속
+    6: '#e2e2da', // 기타
     // 추가 카테고리와 색상을 여기에 정의
 };
 
 const categoryNames = {
-    0: '졸프',
-    1: '약속',
-    2: '예약',
-    3: '수업'
+    1: '학교수업',
+    2: '과제',
+    3: '팀플',
+    4: '운동',
+    5: '약속',
+    6: '기타'
 };
-
 const Timeline = () => {
     const navigate = useNavigate();
     const [selectedDate, setSelectedDate] = useState(0);
@@ -48,12 +52,12 @@ const Timeline = () => {
         for (let i = -4; i <= 4; i++) {
             const newDate = new Date(today);
             newDate.setDate(today.getDate() + i);
-            const isoDate = new Date(newDate.setHours(0, 0, 0, 0)).toISOString().split('T')[0]; // ISO 형식으로 변환
+            const isoDate = new Date(newDate.setFullYear(newDate.getFullYear(), newDate.getMonth(), newDate.getDate())).toISOString().split('T')[0];
             dateList.push({
-                day: days[newDate.getUTCDay()],
-                date: newDate.getUTCDate(),
+                day: days[newDate.getDay()], // 수정: 로컬 시간 기준으로 요일 가져오기
+                date: newDate.getDate(), // 수정: 로컬 시간 기준으로 날짜 가져오기
                 fullDate: isoDate // YYYY-MM-DD 형식으로 변환
-            }); //for부터 여기까지 수정함
+            });
         }
         setDates(dateList);
         setSelectedDate(4); // Today is in the middle of the list

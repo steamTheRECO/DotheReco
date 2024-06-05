@@ -58,6 +58,9 @@ public class Unfixed {
     @JoinColumn(name = "Place_Code")
     private Place place;
 
+    @Column(name = "is_keyword")
+    private Boolean isKeyword;
+
     @OneToMany(mappedBy = "unfixedList1")
     private List<Connection1> connections1 = new ArrayList<>();
 

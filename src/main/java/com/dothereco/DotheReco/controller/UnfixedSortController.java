@@ -42,7 +42,7 @@ public class UnfixedSortController {
         dto.setUnfixedImportance(unfixed.getUnfixedImportance());
         dto.setUnfixedMemo(unfixed.getUnfixedMemo());
         dto.setCategoryId(unfixed.getCategory() != null ? unfixed.getCategory().getCategoryCode() : null);
-        dto.setPlaceId(unfixed.getPlace() != null ? unfixed.getPlace().getPlaceCode() : null);
+        dto.setPlaceName(unfixed.getPlace() != null ? unfixed.getPlace().getPlaceName() : null); // 장소 이름 설정
         return dto;
     }
 

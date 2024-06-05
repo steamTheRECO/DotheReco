@@ -5,12 +5,13 @@ import 'flatpickr/dist/flatpickr.min.css';
 import './css/addNormalCal.css'; // CSS 파일 import
 import axios from 'axios'; // axios import
 
+
 const categoryNames = {
     1: '학교수업',
     2: '과제',
     3: '팀플',
     4: '운동',
-    5: '생활',
+    5: '약속',
     6: '기타'
     // 필요에 따라 추가 카테고리를 여기에 정의
 };
@@ -18,6 +19,7 @@ const categoryNames = {
 const AddNormalSchedulePage = () => {
     const location = useLocation();
     const [selectedPlace, setSelectedPlace] = useState('');
+    const [categories, setCategories] = useState([]); // 추가: categories 상태 정의
     const [scheduleData, setScheduleData] = useState({
         fixedTitle: '',
         fixedStartDay: '',
@@ -31,6 +33,16 @@ const AddNormalSchedulePage = () => {
     const [message, setMessage] = useState('');
     const [isTimeToggleOn, setIsTimeToggleOn] = useState(false);
     const navigate = useNavigate();
+
+    useEffect(() => {
+        axios.get('http://localhost:8080/api/categories')
+            .then(response => {
+                setCategories(response.data);
+            })
+            .catch(error => {
+                console.error('카테고리 데이터를 가져오는 중 오류 발생:', error);
+            });
+    }, []);
 
     useEffect(() => {
         if (location.state) {
@@ -79,6 +91,16 @@ const AddNormalSchedulePage = () => {
                 setMessage('일정 추가에 실패했습니다. 서버 오류가 발생했습니다.');
             }
         };*/
+
+    const handleCategoryChange = (event) => {
+        const { value } = event.target;
+        const selectedCategory = categories.find(category => category.id === parseInt(value, 10));
+        setScheduleData((prevData) => ({
+            ...prevData,
+            categoryCode: value,
+            categoryColor: selectedCategory ? selectedCategory.color : ''
+        }));
+    };
     const handleSubmit = async (event) => {
         event.preventDefault();
         try {
@@ -221,11 +243,21 @@ const AddNormalSchedulePage = () => {
                                placeholder="장소를 입력하세요."
                                onChange={handleInputChange} onClick={handlePlaceInputClick}/>
                     </div>
-                    <div className="addNor-input-container">
+                    {/**  <div className="addNor-input-container">
                         <label>카테고리</label>
                         <input type="text" className="categoryCode" name="categoryCode" id="categoryCode"
                                placeholder="카테고리를 입력하세요"
                                value={scheduleData.categoryCode} onChange={handleInputChange} required/>
+                    </div> **/}
+                    <div className="addNor-input-container">
+                        <label>카테고리</label>
+                        <select className="categoryCode" name="categoryCode" id="categoryCode"
+                                value={scheduleData.categoryCode} onChange={handleInputChange} required>
+                            <option value="">카테고리를 선택하세요</option>
+                            {Object.keys(categoryNames).map(categoryCode => (
+                                <option key={categoryCode} value={categoryCode}>{categoryNames[categoryCode]}</option>
+                            ))}
+                        </select>
                     </div>
                     <div className="addNor-input-container">
                         <label>메모</label>

@@ -10,17 +10,22 @@ import SettingImage from "./images/Setting.png";
 import axios from 'axios';
 // 카테고리별 색상 정의
 const categoryColors = {
-    1: '#F0CAB9', // 약속
-    2: '#FAE4A8', // 예약
-    3: '#B9DEF0', // 수업
+    1: '#DBE9CD', // 학교수업
+    2: '#F0CAB9', // 과제
+    3: '#e9c6ff', // 팀플
+    4: '#FAE4A8', // 운동
+    5: '#B9DEF0', // 약속
+    6: '#e2e2da', // 기타
     // 추가 카테고리와 색상을 여기에 정의
 };
 
 const categoryNames = {
-    0: '졸프',
-    1: '약속',
-    2: '예약',
-    3: '수업'
+    1: '학교수업',
+    2: '과제',
+    3: '팀플',
+    4: '운동',
+    5: '약속',
+    6: '기타'
 };
 
 const WalkingMapPage = () => {
@@ -28,9 +33,9 @@ const WalkingMapPage = () => {
     const [map, setMap] = useState(null);
     const [markers, setMarkers] = useState([]);
     const [userLocation, setUserLocation] = useState({lat: 37.56170342835584, lon: 126.94238994640058}); // 기본값은 이화여자대학교
-    const [coordinate1, setCoordinate1] = useState({lat: 37.56680149281015, lon: 126.9487473277085}); // 신공학관 좌표
-    const [coordinate2, setCoordinate2] = useState({lat: 37.558798426576146, lon: 126.93931655974903}); // 올리브영 좌표
-    const [coordinate3, setCoordinate3] = useState({lat: 37.556049830250984, lon: 126.93824646263005}); // 헬스보이짐 좌표
+    const [coordinate1, setCoordinate1] = useState({lat: 37.56354808779687, lon: 126.9469159498895}); // 포스코관
+    const [coordinate2, setCoordinate2] = useState({lat: 37.558820944219676, lon: 126.93930239418184}); // 올리브영 좌표
+    const [coordinate3, setCoordinate3] = useState({lat: 37.55606559769896, lon: 126.93824644961863}); // 헬스보이짐 좌표
     const mapRef = useRef(null);
     const navigate = useNavigate();
     const location = useLocation();

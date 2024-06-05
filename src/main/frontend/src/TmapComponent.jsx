@@ -6,6 +6,7 @@ const TmapComponent = () => {
     const [searchKeyword, setSearchKeyword] = useState('');
     const [searchResult, setSearchResult] = useState([]);
     const [selectedPlace, setSelectedPlace] = useState(null);
+    const [isKeyword, setIsKeyword] = useState(true);
     const navigate = useNavigate();
     const location = useLocation();
 
@@ -34,6 +35,7 @@ const TmapComponent = () => {
     const handleMarkerClick = (poi) => {
         setSearchKeyword(poi.name);
         setSelectedPlace(poi.name);
+        setIsKeyword(false);
     };
 
     const handleConfirm = () => {
@@ -42,7 +44,7 @@ const TmapComponent = () => {
         const previousPath = location.state?.from || '/';
         const scheduleData = location.state?.scheduleData || {};
 
-        navigate(previousPath, { state: { place, scheduleData: { ...scheduleData, placeName: place } } });
+        navigate(previousPath, { state: { place, scheduleData: { ...scheduleData, placeName: place, isKeyword: isKeyword } } });
     };
 
     return (
@@ -57,7 +59,8 @@ const TmapComponent = () => {
                     type="text"
                     className="Tmapplace-text_custom"
                     value={searchKeyword}
-                    onChange={e => setSearchKeyword(e.target.value)}
+                    onChange={e => {setSearchKeyword(e.target.value);
+                        setIsKeyword(true);}} //검색어 변경되면 키워드로
                 />
                 <button className="Tmapplace-search-button" onClick={handleSearch}>검색</button>
             </div>

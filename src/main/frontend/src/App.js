@@ -19,7 +19,7 @@ import RecoIngMake from "./RecoIngMake";
 import TimeLineMake from "./TimeLineMake";
 import MainMake from "./MainMake";
 import loading from "./loading";
-
+import ToDoListMake from "./ToDoListMake";
 function App() {
     return (
         <Router>
@@ -43,6 +43,7 @@ function App() {
                 <Route path="/TimeLineMake" element={<TimeLineMake/>} />
                 <Route path="/MainMake" element={<MainMake/>} />
                 <Route path ="/loading" element={<loading/>} />
+                <Route path="/ToDoListMake" element={<ToDoListMake/>} />
             </Routes>
         </Router>
     );
