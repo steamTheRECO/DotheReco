@@ -138,22 +138,22 @@ const RecommendationPage = () => {
     const goToSetting=()=>{
         navigate('/Setting');
     }
-
-    const goToRecoIngMake = () => {
+/*
+    const goToRecoIng = () => {
         // 페이지 이동 전에 로딩 상태를 설정합니다.
         // 이 예시에서는 setLoading 함수를 통해 로딩 상태를 변경합니다.
         setLoading(true);
 
         // setTimeout 함수를 사용하여 일정 시간이 지난 후에 페이지 이동을 수행합니다.
         setTimeout(() => {
-            navigate('/RecoIngMake');
+            navigate('/RecoIng');
         }, 2000); // 2000밀리초(2초) 후에 페이지 이동
 
         // setTimeout 함수를 사용하여 임의로 추가한 로딩 시간이 지난 후에 로딩 상태를 해제할 수 있습니다.
         setTimeout(() => {
             setLoading(false);
         }, 2500); // 2500밀리초(2.5초) 후에 로딩 상태 해제
-    }
+    }*/
 
     const formatTime = (time) => {
         const [hour, minute] = time.split(':');
@@ -187,7 +187,7 @@ const RecommendationPage = () => {
             <button type="button" className="reco-back-button" onClick={() => window.history.back()}>
                 &lt;
             </button>
-            <button type="submit" className="reco-submit" form="reco-form" onClick={goToRecoIngMake}>추천</button>
+            <button type="submit" className="reco-submit" form="reco-form" onClick={goToRecoIng}>추천</button>
             {/* 타임 테이블 */}
             <div className="reco-timetable-container">
                 <div className="reco-timetable">
