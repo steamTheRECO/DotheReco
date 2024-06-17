@@ -97,10 +97,15 @@ public class UnfixedService {
         if (dto.getPlaceName() != null) {
             Optional<Place> place = placeRepository.findByPlaceName(dto.getPlaceName());
             if (place.isPresent()) {
-                unfixed.setPlace(place.get());
+                Place existingPlace = place.get();
+                existingPlace.setLat(dto.getLat()); // 위도 설정
+                existingPlace.setLon(dto.getLon()); // 경도 설정
+                unfixed.setPlace(existingPlace);
             } else {
                 Place newPlace = new Place();
                 newPlace.setPlaceName(dto.getPlaceName());
+                newPlace.setLat(dto.getLat()); // 위도 설정
+                newPlace.setLon(dto.getLon()); // 경도 설정
                 Place savedPlace = placeRepository.save(newPlace);
                 unfixed.setPlace(savedPlace);
             }

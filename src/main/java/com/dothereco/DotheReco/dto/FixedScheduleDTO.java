@@ -29,4 +29,6 @@ public class FixedScheduleDTO {
     private String categoryName;
     private String categoryColor;
     private String placeName; // 새로 추가
+    private Double lat; // 위도 추가
+    private Double lon; // 경도 추가
 }

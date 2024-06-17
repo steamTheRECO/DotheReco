@@ -70,6 +70,8 @@ public class UnfixedController {
         dto.setUnfixedMemo(unfixed.getUnfixedMemo());
         dto.setCategoryId(unfixed.getCategory() != null ? unfixed.getCategory().getCategoryCode() : null);
         dto.setPlaceName(unfixed.getPlace() != null ? unfixed.getPlace().getPlaceName() : null);
+        dto.setLat(unfixed.getPlace() != null ? unfixed.getPlace().getLat() : null);
+        dto.setLon(unfixed.getPlace() != null ? unfixed.getPlace().getLon() : null);
         dto.setIsKeyword(unfixed.getIsKeyword());
         return dto;
     }

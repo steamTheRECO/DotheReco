@@ -19,6 +19,8 @@ public class UnfixedScheduleDTO {
    // private Boolean reminderMark;
     private Long categoryId;
     private String placeName;
+    private Double lat; // 위도 추가
+    private Double lon; // 경도 추가
     private Boolean isKeyword;
 
 }

@@ -18,6 +18,8 @@ const AddFlexSchedulePage = () => {
         flexMemo: '',
         categoryCode: '',
         placeName: selectedPlace,
+        lat: '',  // 추가: 위도
+        lon: '',  // 추가: 경도
         importance: 3,
         repeatDays: []
     });
@@ -38,6 +40,8 @@ const AddFlexSchedulePage = () => {
                         flexMemo: eventToEdit.unfixedMemo,
                         categoryCode: eventToEdit.category ? eventToEdit.category.categoryCode : '',
                         placeName: eventToEdit.place ? eventToEdit.place.placeName : '',
+                        lat: eventToEdit.place ? eventToEdit.place.lat : '',
+                        lon: eventToEdit.place ? eventToEdit.place.lon : '',
                         importance: eventToEdit.unfixedImportance,
                         repeatDays: []
                     });
@@ -50,7 +54,9 @@ const AddFlexSchedulePage = () => {
             setIsKeyword(location.state.scheduleData?.isKeyword ?? true);
             setScheduleData(prevData => ({
                 ...prevData,
-                placeName: location.state.place
+                placeName: location.state.place,
+                lat: location.state.lat,  // 위치 정보 저장
+                lon: location.state.lon   // 위치 정보 저장
             }));
         }
     }, [id, location.state]);
@@ -98,11 +104,12 @@ const AddFlexSchedulePage = () => {
                 unfixedDeadline: scheduleData.flexDeadline,  // 날짜만 전송
                 unfixedMemo: scheduleData.flexMemo,
                 categoryId: scheduleData.categoryCode ? parseInt(scheduleData.categoryCode, 10) : null,
-                //placeId: scheduleData.placeCode ? parseInt(scheduleData.placeCode, 10) : null,
                 placeName: scheduleData.placeName,
+                lat: scheduleData.placeName && !isKeyword ? scheduleData.lat : null,
+                lon: scheduleData.placeName && !isKeyword ? scheduleData.lon : null,
                 unfixedImportance: scheduleData.importance,
                 reminderMark: false,
-                isKeyword: isKeyword
+                isKeyword: scheduleData.placeName ? isKeyword : false
             };
 
             let response;
@@ -143,10 +150,10 @@ const AddFlexSchedulePage = () => {
     };
 
     const handlePlaceInputClick = () => {
-        navigate('/Map', { state: { from: '/AddFlexSchedule' } });
+        navigate('/Map', { state: { from: '/AddFlexSchedule', scheduleData } });
     };
 
-    const goToMain=()=>{
+    const goToMain = () => {
         navigate('/main')
     }
 
@@ -223,6 +230,13 @@ const AddFlexSchedulePage = () => {
                         <textarea className="flexMemo" name="flexMemo" id="flexMemo" rows="4" placeholder="메모"
                                   value={scheduleData.flexMemo} onChange={handleInputChange}></textarea>
                     </div>
+                    {scheduleData.lat && scheduleData.lon && (
+                        <div className="addFlex-input-container">
+                            <label>위치 정보</label>
+                            <p>위도: {scheduleData.lat}</p>
+                            <p>경도: {scheduleData.lon}</p>
+                        </div>
+                    )}
                 </div>
             </form>
             {message && <div className="message">{message}</div>}

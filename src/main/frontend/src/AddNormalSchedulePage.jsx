@@ -29,6 +29,8 @@ const AddNormalSchedulePage = () => {
         fixedMemo: '',
         categoryCode: '',
         placeName: '',
+        lat: '', // 추가: 위도
+        lon: '' // 추가: 경도
     });
     const [message, setMessage] = useState('');
     const [isTimeToggleOn, setIsTimeToggleOn] = useState(false);
@@ -46,12 +48,14 @@ const AddNormalSchedulePage = () => {
 
     useEffect(() => {
         if (location.state) {
-            const { place, scheduleData: previousData } = location.state;
+            const { place, lat, lon, scheduleData: previousData } = location.state;
             if (place) {
                 setSelectedPlace(place);
                 setScheduleData(prevData => ({
                     ...prevData,
-                    placeName: place
+                    placeName: place,
+                    lat: lat || prevData.lat,
+                    lon: lon || prevData.lon
                 }));
             }
             if (previousData) {
@@ -115,7 +119,8 @@ const AddNormalSchedulePage = () => {
                 categoryCode: scheduleData.categoryCode ? parseInt(scheduleData.categoryCode, 10) : null,
 
                 placeName: scheduleData.placeName, // placeName으로 수정
-
+                lat: scheduleData.lat, // 위도 추가
+                lon: scheduleData.lon // 경도 추가
                 //placeCode: scheduleData.placeCode ? parseInt(scheduleData.placeCode, 10) : null,
 
             };
@@ -264,6 +269,13 @@ const AddNormalSchedulePage = () => {
                         <textarea className="fixedMemo" name="fixedMemo" id="memo" rows="4" placeholder="메모"
                                   value={scheduleData.fixedMemo} onChange={handleInputChange}></textarea>
                     </div>
+                    {scheduleData.lat && scheduleData.lon && (
+                        <div className="addNor-input-container">
+                            <label>위치 정보</label>
+                            <p>위도: {scheduleData.lat}</p>
+                            <p>경도: {scheduleData.lon}</p>
+                        </div>
+                    )}
                 </div>
             </form>
             {message && <div className="message">{message}</div>}

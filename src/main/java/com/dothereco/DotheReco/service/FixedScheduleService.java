@@ -91,8 +91,12 @@ public List<TimeBlock> getBusyTimeSlots(LocalDate date) {
                 .orElseGet(() -> {
                     Place newPlace = new Place();
                     newPlace.setPlaceName(fixedScheduleDto.getPlaceName());
+                    newPlace.setLat(fixedScheduleDto.getLat());
+                    newPlace.setLon(fixedScheduleDto.getLon());
                     return placeRepository.save(newPlace);
                 });
+        place.setLat(fixedScheduleDto.getLat());
+        place.setLon(fixedScheduleDto.getLon());
         fixed.setPlace(place);
 
         return fixedScheduleRepository.save(fixed);
@@ -138,8 +142,12 @@ public List<TimeBlock> getBusyTimeSlots(LocalDate date) {
                 .orElseGet(() -> {
                     Place newPlace = new Place();
                     newPlace.setPlaceName(fixedScheduleDto.getPlaceName());
+                    newPlace.setLat(fixedScheduleDto.getLat());
+                    newPlace.setLon(fixedScheduleDto.getLon());
                     return placeRepository.save(newPlace);
                 });
+        place.setLat(fixedScheduleDto.getLat());
+        place.setLon(fixedScheduleDto.getLon());
         fixed.setPlace(place);
 
         return fixedScheduleRepository.save(fixed);
