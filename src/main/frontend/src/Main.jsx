@@ -420,8 +420,8 @@ const Main = () => {
         navigate('/Main');
     };
 
-    const goToDoListMake=()=>{
-        navigate('/ToDoListMake');
+    const goToDoList=()=>{
+        navigate('/ToDoList');
     }
 
     const goToSetting=()=>{
@@ -599,7 +599,7 @@ const Main = () => {
                     <p>Calendar</p>
                 </div>
                 <div className="menu-details">
-                    <img className="TodoListImage" src={TodoListImage} alt="To Do List" onClick={goToDoListMake}/>
+                    <img className="TodoListImage" src={TodoListImage} alt="To Do List" onClick={goToDoList}/>
                     <p>To Do list</p>
                 </div>
                 <div className="menu-details">
