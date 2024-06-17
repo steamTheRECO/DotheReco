@@ -1,6 +1,7 @@
 package com.dothereco.DotheReco.mapper;
 
 import com.dothereco.DotheReco.domain.Fixed;
+import com.dothereco.DotheReco.domain.Place;
 import com.dothereco.DotheReco.dto.FixedScheduleDTO;
 import org.springframework.stereotype.Component;
 
@@ -16,6 +17,14 @@ public class FixedScheduleMapper {
         entity.setFixedStartTime(fixedDto.getFixedStartTime());
         entity.setFixedEndTime(fixedDto.getFixedEndTime());
         entity.setFixedMemo(fixedDto.getFixedMemo());
+        // Place 설정 추가
+        if (fixedDto.getPlaceName() != null) {
+            Place place = new Place();
+            place.setPlaceName(fixedDto.getPlaceName());
+            place.setLat(fixedDto.getLat());
+            place.setLon(fixedDto.getLon());
+            entity.setPlace(place);
+        }
         return entity;
     }
     public FixedScheduleDTO toDto(Fixed fixed){
@@ -34,6 +43,8 @@ public class FixedScheduleMapper {
         }
         if (fixed.getPlace() != null) {
             dto.setPlaceName(fixed.getPlace().getPlaceName());  // placeName 설정 추가
+            dto.setLat(fixed.getPlace().getLat());  // 위도 설정 추가
+            dto.setLon(fixed.getPlace().getLon());  // 경도 설정 추가
         }
 
         return dto;

@@ -25,4 +25,10 @@ public class Place {
     @Column(name = "Place_bookmarks")
     private Boolean placeBookmarks;
 
+    @Column(name = "Lat")
+    private Double lat; // 위도 추가
+
+    @Column(name = "Lon")
+    private Double lon; // 경도 추가
+
 }
