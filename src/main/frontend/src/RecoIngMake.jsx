@@ -46,7 +46,7 @@ const RecoIngMake = ({ recommendedSchedules }) => {
         setSchedules(sortedSchedules);
     }, []);
 
-    useEffect(() => {
+    /*useEffect(() => {
         const loadEvents = () => {
             const storedEvents = JSON.parse(localStorage.getItem('events')) || [];
             const today = new Date();
@@ -55,90 +55,10 @@ const RecoIngMake = ({ recommendedSchedules }) => {
                 return eventDate.toDateString() === today.toDateString();
             });
 
-            // 미리 정의된 일정 추가
-            const predefinedSchedules = [
-                {
-                    startTime: "08:00",
-                    endTime: "09:30",
-                    event: "인공지능",
-                    category: 1,
-                    place: "이화여자대학교"
-                },
-                {
-                    startTime: "10:00",
-                    endTime: "12:00",
-                    event: "인공지능 과제",
-                    category: 2,
-                    place: "이화여자대학교"
-                },
-                {
-                    startTime: "12:30",
-                    endTime: "14:00",
-                    event: "컴파일러",
-                    category: 1,
-                    place: "이화여자대학교"
-                },
-                {
-                    startTime: "14:00",
-                    endTime: "15:00",
-                    event: "점심 약속",
-                    category: 5,
-                    place: "이화여자대학교"
-                },
-                {
-                    startTime: "16:00",
-                    endTime: "19:00",
-                    event: "동아리",
-                    category: 6,
-                    place: "이화여자대학교 포스코관"
-                },
-                {
-                    startTime: "19:30",
-                    endTime: "20:30",
-                    event: "올리브영",
-                    category: 6,
-                    place: "올리브영 신촌명물거리점"
-                },
-                {
-                    startTime: "20:30",
-                    endTime: "21:30",
-                    event: "PT",
-                    category: 4,
-                    place: "헬스보이짐 신촌점"
-                },
-                {
-                    startTime: "22:00",
-                    endTime: "23:00",
-                    event: "과외 준비",
-                    category: 2,
-                    place: "신촌 럭키아파트 102동"
-                },
-                {
-                    startTime: "23:00",
-                    endTime: "24:00",
-                    event: "분리수거",
-                    category: 6,
-                    place: "신촌 럭키아파트 102동"
-                }
-            ];
-
-
-            // 오늘의 일정과 미리 정의된 일정을 합치기
-            const timeTableEvents = [
-                ...predefinedSchedules,
-                ...eventsForSelectedDate.map(event => ({
-                    startTime: event.fixedStartTime,
-                    endTime: event.fixedEndTime,
-                    event: event.fixedTitle,
-                    category: event.categoryCode,
-                    place: event.place || ""
-                }))
-            ];
-
             setTimeTable(timeTableEvents);
         };
         loadEvents();
-    }, []);
+    }, []);*/
 
     const scheduleItems = [
         '인공지능 과제','올리브영', '과외 준비', '분리수거',

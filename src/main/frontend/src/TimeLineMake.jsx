@@ -64,75 +64,7 @@ const TimelineMake = () => {
     }, []);
 
 
-    useEffect(() => {
-        const predefinedEvents = [
-            {
-                startTime: "08:00",
-                endTime: "09:30",
-                event: "인공지능",
-                category: 1,
-                place: "이화여자대학교"
-            },
-            {
-                startTime: "10:00",
-                endTime: "12:00",
-                event: "인공지능 과제",
-                category: 2,
-                place: "이화여자대학교"
-            },
-            {
-                startTime: "12:30",
-                endTime: "14:00",
-                event: "컴파일러",
-                category: 1,
-                place: "이화여자대학교"
-            },
-            {
-                startTime: "14:00",
-                endTime: "15:00",
-                event: "점심 약속",
-                category: 5,
-                place: "이화여자대학교"
-            },
-            {
-                startTime: "16:00",
-                endTime: "19:00",
-                event: "동아리",
-                category: 6,
-                place: "이화여자대학교 포스코관"
-            },
-            {
-                startTime: "19:30",
-                endTime: "20:30",
-                event: "올리브영",
-                category: 6,
-                place: "올리브영 신촌명물거리점"
-            },
-            {
-                startTime: "20:30",
-                endTime: "21:30",
-                event: "헬스장",
-                category: 4,
-                place: "헬스보이짐 신촌점"
-            },
-            {
-                startTime: "22:00",
-                endTime: "23:00",
-                event: "과외 준비",
-                category: 2,
-                place: "신촌 럭키아파트 102동"
-            },
-            {
-                startTime: "23:00",
-                endTime: "24:00",
-                event: "분리수거",
-                category: 6,
-                place: "신촌 럭키아파트 102동"
-            }
-        ];
 
-        setTimeTable(predefinedEvents);
-    }, [selectedDate]);
 
     const goToTimeLine = () => {
         navigate('/timeLine');

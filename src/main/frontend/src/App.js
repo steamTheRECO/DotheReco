@@ -24,7 +24,7 @@ function App() {
     return (
         <Router>
             <Routes>
-                <Route path="/" element={<StartPage />} />
+                <Route path="/" element={<Main />} />
                 <Route path="/signup" element={<SignupPage />} />
                 <Route path="/login" element={<LoginPage />} />
                 <Route path="/addNormalschedule" element={<AddNormalSchedulePage/>} />
@@ -43,7 +43,7 @@ function App() {
                 <Route path="/TimeLineMake" element={<TimeLineMake/>} />
                 <Route path="/MainMake" element={<MainMake/>} />
                 <Route path ="/loading" element={<loading/>} />
-                <Route path="/ToDoListMake" element={<ToDoListMake/>} />
+
             </Routes>
         </Router>
     );
